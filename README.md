@@ -1,6 +1,7 @@
 # 🧱 Scaffoldia
 
-**Scaffoldia** is a dialectic, modular, and community-driven repo scaffolding engine. It helps developers, educators, and teams generate idiomatic, validated, and narratable project structures across languages, tools, and epistemic stances.
+**Scaffoldia** is a developer-centred, modular, and community-driven repo scaffolding engine. 
+It helps developers, educators, and teams generate idiomatic, validated, and narratable project structures across languages, tools, and a range of project themes and audience stances.
 
 ## 🔧 What It Does
 
@@ -9,8 +10,6 @@
 - 🧪 Infers missing structure with MiniKanren
 - 🎮 Offers a visual Blockly-style builder (Svelte/Vite)
 - 🛰️ Injects CI/CD and dialectic logic via SaltRover or Nix
-
-## 🗺️ Structure
 
 ## Structure
 
@@ -26,10 +25,12 @@ scaffoldia/
 ## 🚀 Getting Started
 
 ```bash
-source scaffoldia-init.nu
+./scaffoldia-init.sh source scaffoldia-init.nu for nushell users
 cd scaffoldia
 git init
 
 🧠 Philosophy
 
-Scaffoldia is the Rosetta Stone of repo structure: symbolic, composable, and narratable. Every folder has a role. Every tool has a dialect.
+Scaffoldia is the Rosetta Stone of repo structure: symbolic and scalable; composable and narratable. 
+
+Every folder and file has its vole. 
