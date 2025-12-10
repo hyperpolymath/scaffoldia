@@ -1,9 +1,9 @@
-# 🧱 Scaffoldia
+= 🧱 Scaffoldia
 
-**Scaffoldia** is a developer-centred, modular, and community-driven repo scaffolding engine. 
+*Scaffoldia* is a developer-centred, modular, and community-driven repo scaffolding engine. 
 It helps developers, educators, and teams generate idiomatic, validated, and narratable project structures across languages, tools, and a range of project themes and audience stances.
 
-## 🔧 What It Does
+== 🔧 What It Does
 
 - 🧠 Validates language/tool templates via a Haskell-powered registry
 - 🧩 Composes repo scaffolds using Nickel
@@ -11,7 +11,7 @@ It helps developers, educators, and teams generate idiomatic, validated, and nar
 - 🎮 Offers a visual Blockly-style builder (Svelte/Vite)
 - 🛰️ Injects CI/CD and dialectic logic via SaltRover or Nix
 
-## Structure
+== Structure
 
 ```plaintext
 scaffoldia/
@@ -22,7 +22,7 @@ scaffoldia/
 ├── ui/               # Visual builder (Svelte/Vite)
 ├── docs/             # Architecture, mascot logic, contribution guides
 
-## 🚀 Getting Started
+== 🚀 Getting Started
 
 ```bash
 ./scaffoldia-init.sh source scaffoldia-init.nu for nushell users
