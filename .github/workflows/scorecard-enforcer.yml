@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: MPL-2.0
 # Prevention workflow - runs OpenSSF Scorecard and fails on low scores
 name: OpenSSF Scorecard Enforcer
 
@@ -12,6 +12,8 @@ on:
 permissions: read-all
 
 jobs:
+  # Scorecard job - MUST only have 'uses:' steps per OpenSSF requirements
+  # See: https://github.com/ossf/scorecard-action#workflow-restrictions
   scorecard:
     runs-on: ubuntu-latest
     permissions:
@@ -34,22 +36,7 @@ jobs:
         with:
           sarif_file: results.sarif
 
-      - name: Check minimum score
-        run: |
-          # Parse score from results
-          SCORE=$(jq -r '.runs[0].tool.driver.properties.score // 0' results.sarif 2>/dev/null || echo "0")
-
-          echo "OpenSSF Scorecard Score: $SCORE"
-
-          # Minimum acceptable score (0-10 scale)
-          MIN_SCORE=5
-
-          if [ "$(echo "$SCORE < $MIN_SCORE" | bc -l)" = "1" ]; then
-            echo "::error::Scorecard score $SCORE is below minimum $MIN_SCORE"
-            exit 1
-          fi
-
-  # Check specific high-priority items
+  # Check specific high-priority items (separate job, can use 'run:' steps)
   check-critical:
     runs-on: ubuntu-latest
     steps:
