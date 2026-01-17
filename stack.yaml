@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MPL-2.0
+resolver: ghc-9.8.2
+
+packages:
+  - .
+
+extra-deps: []
+
+# Use system GHC if compatible
+system-ghc: true
+install-ghc: false
