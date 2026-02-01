@@ -1,4 +1,4 @@
-;; SPDX-License-Identifier: MPL-2.0
+;; SPDX-License-Identifier: PMPL-1.0-or-later
 ;; minikanren-core.scm - MicroKanren implementation for Guile Scheme
 ;;
 ;; "MiniKanren does not solve your repo - it reveals what your repo refuses to admit."
