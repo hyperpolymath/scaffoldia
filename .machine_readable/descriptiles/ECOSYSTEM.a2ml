@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: MPL-2.0
+# ECOSYSTEM.a2ml — Ecosystem position
+#
+# This is the ECOSYSTEM file for scaffoldia itself.
+
+[metadata]
+project = "scaffoldia"
+ecosystem = "hyperpolymath"
+
+[position]
+type = "tooling"
+purpose = "Full-featured repository designer for the RSR estate: composes spine@pin x variant pack x features x profile into new repos and retrofits existing ones. The top layer of the scaffolding stack."
+
+[pipeline]
+position = "foundation-tooling"
+chain = "standards → rsr-template-repo → scaffoldia → (designed/retrofitted estate repos)"
+notes = "standards defines the canon; rsr-template-repo operationalises it as a basic template (`just init`); scaffoldia is the full-featured designer that consumes variant contracts (VARIANT.a2ml) as data. Extracted from reposystem 2026-06-26, gitlinked back."
+coordination = "standards"
+
+[related-projects]
+projects = [
+  { name = "standards", relationship = "standard-source", notes = "Defines the RSR standard, contractile canon, and policies scaffoldia composes against." },
+  { name = "rsr-template-repo", relationship = "spine-source", notes = "Canonical template; scaffoldia composes its spine and will eventually regenerate the rsr-*-template-repo family from it (templates-as-generated-artifacts interim, owner-ratified 2026-07-07)." },
+  { name = "rsr-julia-library-template-repo", relationship = "variant-reference", notes = "First variant contract (VARIANT.a2ml + drift gate); the reference pack definition for the composer." },
+  { name = "reposystem", relationship = "origin-monorepo", notes = "scaffoldia was extracted from reposystem (2026-06-26) and is gitlinked back as a submodule." },
+  { name = "k9-svc", relationship = "validation-tooling", notes = "Runs the self-validating k9.ncl checks (.machine_readable/self-validating/)." },
+]

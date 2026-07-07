@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: MPL-2.0
+# Clade declaration — part of the gv-clade-index registry
+# See: https://github.com/hyperpolymath/gv-clade-index
+
+[identity]
+# TODO(owner): uuid + clade below were inherited verbatim from the
+# rsr-template-repo scaffold and belong to the TEMPLATE in the
+# gv-clade-index registry. Scaffoldia needs its own registry entry —
+# owner-ratified, do not invent here.
+uuid = "a5ea1382-a34c-5334-8a46-a2ebe904c810"
+primary-forge = "github"
+primary-owner = "hyperpolymath"
+canonical-name = "scaffoldia"
+prefixed-name = "rm-scaffoldia"
+
+[clade]
+primary = "rm"
+secondary = ["gv"]
+assigned = "2026-03-16"
+rationale = "inherited from template scaffold — pending owner (re)assignment via gv-clade-index"
+
+[forges]
+github = "hyperpolymath/scaffoldia"
+gitlab = "hyperpolymath/scaffoldia"
+bitbucket = "hyperpolymath/scaffoldia"
+
+[lineage]
+type = "standalone"
+parent = "rsr-template-repo (RSR canonical template); component extracted from reposystem 2026-06-26 (gitlinked back)"
+born = "2026-06-26"

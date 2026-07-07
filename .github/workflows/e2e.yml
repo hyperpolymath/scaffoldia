@@ -33,7 +33,25 @@ concurrency:
   group: e2e-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-# ─── End-to-End Tests ──────────────────────────────────────────────
+  # ─── Default: repo smoke (always runs — not a silent no-op) ─────────
+  # Runs the repo's own E2E harness (tests/e2e.sh). Downstream work either
+  # extends tests/e2e.sh or uncomments a stack block below.
+  e2e:
+    name: E2E — smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Run E2E harness
+        run: |
+          if [ -f tests/e2e.sh ]; then
+            bash tests/e2e.sh
+          else
+            echo "::notice::no tests/e2e.sh present — nothing to run"
+          fi
+
+# ─── End-to-End Tests (downstream stack-specific examples) ─────────
 # Uncomment ONE of the following e2e job blocks matching your stack.
 
 ## === RUST E2E ===
