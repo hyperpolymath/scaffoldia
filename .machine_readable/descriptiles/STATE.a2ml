@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# STATE.a2ml — Project state checkpoint
+#
+# This is the STATE file for scaffoldia itself.
+
+[metadata]
+project = "scaffoldia"
+version = "0.1.0"
+last-updated = "2026-07-07"
+status = "active"  # active | paused | archived
+
+[project-context]
+name = "scaffoldia"
+purpose = "Full-featured repository designer for the RSR estate: composes spine@pin x variant pack x features x profile into new repos, and retrofits existing ones (owner mandate 2026-07-07: composer + retrofit from day one). Sits above rsr-template-repo (`just init`, basic) in the scaffolding stack; consumes variant contracts (VARIANT.a2ml, ADR-0002 in rsr-template-repo) as data."
+completion-percentage = 5
+
+[position]
+phase = "design"           # design | implementation | testing | maintenance | archived
+maturity = "experimental"  # experimental | alpha | beta | production | lts
+
+[route-to-mvp]
+milestones = [
+  { name = "Phase 0: RSR shell extracted from reposystem (2026-06-26), identity + hygiene", completion = 90 },
+  { name = "Phase 1: composer design ADR (compose spine@pin x pack x features x profile)", completion = 0 },
+  { name = "Phase 2: consume VARIANT.a2ml contracts as pack definitions (julia = first pack)", completion = 0 },
+  { name = "Phase 3: retrofit engine (pack-diff against existing repos)", completion = 0 },
+  { name = "Phase 4: template-maintenance sync loop (regenerate rsr-*-template-repo family until cut-off)", completion = 0 },
+]
+
+[blockers-and-issues]
+issues = [
+  "Composer implementation language/design not yet decided (design ADR pending)",
+  "repo-batcher absorption (reposystem#56 V->Zig port) undecided — revisit after composer v0.1",
+]
+
+[critical-next-actions]
+actions = [
+  "Author composer design ADR (consume VARIANT.a2ml; two distribution paths stay coherent)",
+  "Define pack format derived from variant contracts (rsr-julia-library-template-repo = reference)",
+  "Decide src/ pillar implementation approach (current Idris2+Zig ABI seam is inherited scaffold)",
+]
+
+[maintenance-status]
+last-run-utc = "never"
+last-report = "docs/reports/maintenance/latest.json"
+last-result = "unknown"  # unknown | pass | warn | fail
+open-warnings = 0
+open-failures = 0
+
+[ecosystem]
+part-of = ["RSR Framework", "scaffolding stack (standards -> rsr-template-repo -> scaffoldia)"]
+depends-on = ["rsr-template-repo", "standards"]

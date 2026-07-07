@@ -1,55 +1,56 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
-= {{PROJECT_NAME}}
+= Scaffoldia
 :toc:
 :toc-placement: preamble
 
-image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://{{FORGE}}/{{OWNER}}/{{REPO}}"]
+image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/scaffoldia"]
 image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[License: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
-image:https://api.thegreenwebfoundation.org/greencheckimage/{{FORGE}}[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url={{FORGE}}"]
+image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
 
-{{PROJECT_DESCRIPTION}}
+Full-featured repository designer for the RSR (Rhodium Standard Repository)
+estate: composes *spine@pin × variant pack × features × profile* into new
+repositories, and retrofits existing ones.
 
-[IMPORTANT]
+[NOTE]
 ====
-*This file is a template.* You are reading `README.adoc` from the *RSR template repo*
-(or a freshly-cloned copy of it). Run `just init` to replace every `{{PLACEHOLDER}}`
-token with your project's details, then delete this admonition. Until you do, the
-`{{...}}` markers below are intentional placeholders, not content.
+*Status: design phase.* This repository currently carries the RSR substrate
+(governance, CI, machine-readable metadata) and the design surface for the
+composer; the composition engine itself is not built yet. See
+`.machine_readable/descriptiles/STATE.a2ml` for the honest state.
 ====
 
 == What this is
 
-A new repository scaffolded from the *Rhodium Standard Repository (RSR)* template:
-a batteries-included starting point that ships with CI/CD, machine-readable project
-metadata, an AI-agent gatekeeper protocol, a formally-typed ABI/FFI seam
-(Idris2 + Zig), container and reproducible-build scaffolding, and governance
-infrastructure — all wired and passing the RSR validators on day one.
+Scaffoldia is the top layer of the estate's scaffolding stack:
 
-Replace this section with a description of *your* project once initialised.
+  standards → rsr-template-repo → scaffoldia → (designed/retrofitted repos)
+
+`standards` defines the RSR canon; `rsr-template-repo` operationalises it as a
+GitHub template with a basic `just init` scaffolder; *scaffoldia* is the
+full-featured designer that treats variation as data. It consumes each variant
+template's *variant contract* (`VARIANT.a2ml` — parent pin + declared path
+divergences; see ADR-0002 in rsr-template-repo and the reference
+implementation in `rsr-julia-library-template-repo`) so that GitHub's
+"Use this template" path and the composed path can never silently diverge.
+
+Mandated scope (owner, 2026-07-07): *composer + retrofit from day one* — the
+same pack-diff machinery that composes new repos re-synchronises existing
+ones, including regenerating the `rsr-*-template-repo` family as generated
+artifacts until scaffoldia itself takes over ("cut-off day").
 
 == Quick start
 
 [source,bash]
 ----
-# 1. Create a repo from this template (or clone it), then from the repo root:
-just init                # interactive bootstrap: fills every {{PLACEHOLDER}}
-
-# 2. See the available tasks:
 just                     # lists all phases (build, test, validate, audit, ...)
-
-# 3. Check the repo still satisfies the RSR shape:
-just validate            # structure + metadata checks
+just validate            # structure + metadata checks (RSR shape)
 ----
 
-`just init` prompts for the project name, owner, author, licence contact, and the
-other values listed in `.machine_readable/ai/PLACEHOLDERS.adoc`, substitutes them
-across the tree, validates the result, and (if available) runs the `k9-svc` checks.
+== What the substrate provides
 
-== What you get
-
-* *Machine-readable metadata* (`.machine_readable/6a2/`) — `STATE`, `META`,
+* *Machine-readable metadata* (`.machine_readable/descriptiles/`) — `STATE`, `META`,
   `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE`, and `anchors/ANCHOR`,
   in a2ml, so tools and agents can read the project's state and boundaries.
 * *AI gatekeeper protocol* — `0-AI-MANIFEST.a2ml` is the universal entry point that

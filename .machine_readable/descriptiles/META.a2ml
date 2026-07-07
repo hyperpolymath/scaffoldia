@@ -5,12 +5,13 @@
 # Architecture decisions, design rationale, governance.
 
 [metadata]
+project = "scaffoldia"
 version = "0.1.0"
-last-updated = "2026-04-11"
+last-updated = "2026-07-07"
 
 [project-info]
-type = "library"  # TODO: update type (library|binary|service|website|monorepo)  # library | binary | monorepo | service | website
-languages = []             # e.g. ["rust", "zig", "idris2"]
+type = "binary"            # repo designer/composer CLI tooling (implementation language TBD — design phase)
+languages = []             # composer implementation not yet chosen; inherited ABI seam is Idris2+Zig scaffold
 license = "MPL-2.0"
 author = "Jonathan D.A. Jewell (hyperpolymath)"
 

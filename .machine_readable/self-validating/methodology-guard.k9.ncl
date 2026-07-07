@@ -1,3 +1,4 @@
+K9!
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) {{CURRENT_YEAR}} {{AUTHOR}} ({{OWNER}}) <{{AUTHOR_EMAIL}}>
 #
@@ -11,6 +12,17 @@ let methodology_guard = {
   name = "methodology-guard",
   version = "1.0.0",
   description = "Validates that agent work respects declared methodology constraints",
+
+  pedigree = {
+    schema_version = "1.0.0",
+    metadata = {
+      name = "methodology-guard",
+      version = "1.0.0",
+    },
+    security = {
+      leash = 'Yard,
+    },
+  },
 
   checks = {
     divergent_invariant_language = {
@@ -43,7 +55,7 @@ let methodology_guard = {
     state_not_template = {
       description = "STATE.a2ml must not contain template placeholders",
       severity = "warning",
-      file = ".machine_readable/6a2/STATE.a2ml",
+      file = ".machine_readable/descriptiles/STATE.a2ml",
       # NOTE: the PROJECT token below is written as a Nickel concat
       # ("{{" ++ "PROJECT}}") ON PURPOSE. `just init` runs a sed substitution for
       # the brace-PROJECT-brace token over EVERY text file, which would otherwise
