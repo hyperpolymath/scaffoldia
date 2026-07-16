@@ -3,11 +3,39 @@
 # See: https://github.com/hyperpolymath/gv-clade-index
 
 [identity]
-# TODO(owner): uuid + clade below were inherited verbatim from the
-# rsr-template-repo scaffold and belong to the TEMPLATE in the
-# gv-clade-index registry. Scaffoldia needs its own registry entry —
-# owner-ratified, do not invent here.
-uuid = "a5ea1382-a34c-5334-8a46-a2ebe904c810"
+# The TODO that stood here said the inherited uuid + clade were the TEMPLATE's,
+# that scaffoldia needs its own owner-ratified registry entry, and "do not invent
+# here". That warning is kept — and it separates two different things:
+#
+#   * The CLADE is a judgement. Unchanged below, still the owner's to ratify.
+#   * The UUID is NOT a judgement, and deriving it is not inventing it. The
+#     registry spec (gv-clade-index: docs/SPEC-clade-verisim-portal.adoc
+#     §Identity Model) defines it as:
+#
+#         uuid = UUIDv5(namespace = URL, name = "github.com/<owner>/<name>")
+#
+#     "The same repo always produces the same UUID without a lookup table." It is
+#     a fact anyone can recompute and check, not a choice:
+#
+#         uuidgen --sha1 --namespace @url --name "github.com/hyperpolymath/scaffoldia"
+#         -> b090083d-c950-5785-97e7-3bc269167609
+#
+# The method was verified by reproducing the registry's own worked examples
+# byte-for-byte before it was trusted (januskey -> e216170e-…, gv-clade-index ->
+# c88e9ff3-…, rsr-template-repo -> a5ea1382-…).
+#
+# CORRECTED 2026-07-16. This file previously declared a5ea1382-a34c-5334-8a46-
+# a2ebe904c810 — which is rsr-template-repo's own genuine identity, inherited
+# verbatim because `just init` never touches CLADE.a2ml. Scaffoldia was wearing
+# the template's name and telling every arriving agent it WAS the template.
+# Same correction chronicles-of-slavia had on 2026-07-16; paint-type still
+# carries the inherited uuid (its true owner is ambiguous — the repo exists under
+# three orgs — so it is left for the owner rather than guessed at).
+#
+# The owner is not guessed either: `git remote get-url origin` says
+# hyperpolymath/scaffoldia, the repo exists in that org, and it exists in no
+# other. Declaration, remote and forge all agree.
+uuid = "b090083d-c950-5785-97e7-3bc269167609"
 primary-forge = "github"
 primary-owner = "hyperpolymath"
 canonical-name = "scaffoldia"
