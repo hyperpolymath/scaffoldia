@@ -24,4 +24,6 @@ projects = [
   { name = "rsr-julia-library-template-repo", relationship = "variant-reference", notes = "First variant contract (VARIANT.a2ml + drift gate); the reference pack definition for the composer." },
   { name = "reposystem", relationship = "origin-monorepo", notes = "scaffoldia was extracted from reposystem (2026-06-26) and is gitlinked back as a submodule." },
   { name = "k9-svc", relationship = "validation-tooling", notes = "Runs the self-validating k9.ncl checks (.machine_readable/self-validating/)." },
+  { name = "developer-ecosystem/scaffoldia", relationship = "dormant-implementation", notes = "GitLab-lineage implemented Haskell CLI + Nickel builder. Fork resolved 2026-07-21: engine dormant, 7-entry registry harvested into machine-readable-design/harvested-registry/; the Phase 1 composer ADR must weigh it explicitly." },
+  { name = "hypatia", relationship = "conformance-oracle", notes = "rsr-conformance scores composed/retrofitted repos via rsr-profile.a2ml (the profile axis, ADR-0003)." },
 ]

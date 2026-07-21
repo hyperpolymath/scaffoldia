@@ -8,7 +8,7 @@
 [metadata]
 project = "scaffoldia"
 version = "0.1.0"
-last-updated = "2026-07-07"
+last-updated = "2026-07-21"
 status = "active"  # active | paused | archived
 
 [project-context]
@@ -31,16 +31,22 @@ milestones = [
 
 [blockers-and-issues]
 issues = [
-  "Composer implementation language/design not yet decided (design ADR pending)",
+  "Composer design ADR pending — MUST explicitly weigh the dormant GitLab-lineage implementation (developer-ecosystem/scaffoldia: Haskell CLI + Nickel builder), not ignore it; fork resolved 2026-07-21: this repo is canonical, engine dormant, registry harvested (machine-readable-design/harvested-registry/)",
   "repo-batcher absorption (reposystem#56 V->Zig port) undecided — revisit after composer v0.1",
 ]
 
 [critical-next-actions]
 actions = [
-  "Author composer design ADR (consume VARIANT.a2ml; two distribution paths stay coherent)",
-  "Define pack format derived from variant contracts (rsr-julia-library-template-repo = reference)",
+  "Author composer design ADR (consume VARIANT.a2ml/ARCHETYPE.a2ml; weigh dormant Haskell+Nickel engine; two distribution paths stay coherent)",
+  "Define pack format derived from the spine contracts (rsr-template-repo archetypes/ per ADR-0003 + rsr-julia-library-template-repo VARIANT.a2ml = references; harvested-registry entries = input data)",
   "Decide src/ pillar implementation approach (current Idris2+Zig ABI seam is inherited scaffold)",
 ]
+
+[fork-resolution]
+# Two scaffoldia codebases existed with no recorded relationship. Resolved
+# 2026-07-21 (see machine-readable-design/harvested-registry/README.adoc):
+decision = "this repo = canonical design surface + consumer of spine contracts; developer-ecosystem/scaffoldia (GitLab lineage, implemented Haskell CLI + Nickel builder) = dormant engine, registry harvested as data, no parallel development"
+profile-axis = "resolved: profile = capability set per standards template-capability-gates.toml (preset or direct list), i.e. what rsr-profile.a2ml declares (ADR-0003)"
 
 [maintenance-status]
 last-run-utc = "never"
