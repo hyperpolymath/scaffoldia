@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Harvested registry — input data from the dormant GitLab-lineage implementation
+
+Harvested 2026-07-21, verbatim, from
+`developer-ecosystem/scaffoldia/registry/` — the GitLab-lineage scaffoldia,
+which is an *implemented* Haskell CLI + Nickel builder that this (GitHub)
+repository's own blocker list previously ignored ("composer implementation
+not yet decided"). Fork resolution, recorded in
+`.machine_readable/descriptiles/STATE.a2ml`:
+
+* *This* repo is the canonical design surface and the future consumer of the
+  spine's contracts (`ARCHETYPE.a2ml` / `VARIANT.a2ml`, rsr-template-repo
+  ADR-0002/0003).
+* The GitLab-lineage engine stays *dormant* — not deleted, not developed in
+  parallel. Its registry entries live here as **data** informing pack
+  definitions; its Haskell/Nickel engine is one candidate for the Phase 1
+  composer ADR, which must weigh it explicitly rather than ignore it.
+
+Entries (7):
+
+|===
+| Entry | Note
+
+| `julia/package.ncl`      | Julia package shape — cross-checked into the spine's `archetypes/julia-library/` (ADR-0003)
+| `rust/library.ncl`       | Rust library, RSR-bronze tagged
+| `elixir/phoenix-service.ncl` | Elixir Phoenix service
+| `haskell/stack-library.ncl`  | Haskell stack library
+| `gitbot/fleet-bot.ncl`   | gitbot-fleet bot scaffold
+| `ecosystem/reposystem-tool.ncl` | reposystem tool scaffold
+| `rescript/deno-app.ncl`  | *banned-language legacy* (ReScript, banned 2026-05-25) — kept as harvest data only; MUST NOT seed a new archetype
+|===
+
+Two harvest caveats, flagged not fixed (no automated licence edits — ever):
+
+* `julia/package.ncl` declares `license = "PMPL-1.0-or-later"` — outside the
+  Palimpsest carve-out (exactly three repos), so a scaffold minting that
+  header would violate the licence policy. Owner review needed before any
+  consumer uses it.
+* Entries embed `jonathan.jewell@open.ac.uk` authorship defaults; consumers
+  must take identity from `just init` answers, never from harvested data.
+
+The *profile* composition axis (previously a name with no schema anywhere in
+this repo) is resolved by ADR-0003: profile = the capability set of
+standards `.machine_readable/template-capability-gates.toml` — a preset name
+or a direct capability list, exactly what `rsr-profile.a2ml` declares.
