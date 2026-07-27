@@ -5,11 +5,11 @@
 #
 [metadata]
 version = "0.1.0"
-last-updated = "{{CURRENT_DATE}}"
+last-updated = "2026-07-27"
 
 [project]
 name = "[YOUR-REPO-NAME]"
-purpose = "{{PROJECT_DESCRIPTION}}"
+purpose = "Full-featured repository designer for the RSR estate: composes spine × variant pack × features × profile into new repos and retrofits existing ones. Design phase — consumes VARIANT.a2ml contracts; top of the scaffolding stack (standards → rsr-template-repo → scaffoldia)."
 
 [ai-allocation]
 agents = [
