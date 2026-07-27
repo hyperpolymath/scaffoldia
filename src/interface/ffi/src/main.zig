@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// {{PROJECT}} FFI Implementation
+// SCAFFOLDIA FFI Implementation
 //
 // This module implements the C-compatible FFI declared in src/abi/Foreign.idr
 // All types and layouts must match the Idris2 ABI definitions.
@@ -10,7 +10,7 @@ const std = @import("std");
 
 // Version information (keep in sync with project)
 const VERSION = "0.1.0";
-const BUILD_INFO = "{{PROJECT}} built with Zig " ++ @import("builtin").zig_version_string;
+const BUILD_INFO = "SCAFFOLDIA built with Zig " ++ @import("builtin").zig_version_string;
 
 /// Thread-local error storage
 threadlocal var last_error: ?[]const u8 = null;
@@ -38,8 +38,10 @@ pub const Result = enum(c_int) {
     null_pointer = 4,
 };
 
-/// Library handle (opaque to prevent direct access)
-pub const Handle = opaque {
+/// Library handle. Still opaque to C callers (they only ever see a pointer),
+/// but cannot be declared `opaque {}` in Zig since opaque types may not have
+/// fields.
+pub const Handle = struct {
     // Internal state hidden from C
     allocator: std.mem.Allocator,
     initialized: bool,
@@ -52,7 +54,7 @@ pub const Handle = opaque {
 
 /// Initialize the library
 /// Returns a handle, or null on failure
-export fn {{project}}_init() ?*Handle {
+pub export fn scaffoldia_init() ?*Handle {
     const allocator = std.heap.c_allocator;
 
     const handle = allocator.create(Handle) catch {
@@ -71,7 +73,7 @@ export fn {{project}}_init() ?*Handle {
 }
 
 /// Free the library handle
-export fn {{project}}_free(handle: ?*Handle) void {
+pub export fn scaffoldia_free(handle: ?*Handle) void {
     const h = handle orelse return;
     const allocator = h.allocator;
 
@@ -87,7 +89,7 @@ export fn {{project}}_free(handle: ?*Handle) void {
 //==============================================================================
 
 /// Process data (example operation)
-export fn {{project}}_process(handle: ?*Handle, input: u32) Result {
+pub export fn scaffoldia_process(handle: ?*Handle, input: u32) Result {
     const h = handle orelse {
         setError("Null handle");
         return .null_pointer;
@@ -111,7 +113,7 @@ export fn {{project}}_process(handle: ?*Handle, input: u32) Result {
 
 /// Get a string result (example)
 /// Caller must free the returned string
-export fn {{project}}_get_string(handle: ?*Handle) ?[*:0]const u8 {
+pub export fn scaffoldia_get_string(handle: ?*Handle) ?[*:0]const u8 {
     const h = handle orelse {
         setError("Null handle");
         return null;
@@ -133,7 +135,7 @@ export fn {{project}}_get_string(handle: ?*Handle) ?[*:0]const u8 {
 }
 
 /// Free a string allocated by the library
-export fn {{project}}_free_string(str: ?[*:0]const u8) void {
+pub export fn scaffoldia_free_string(str: ?[*:0]const u8) void {
     const s = str orelse return;
     const allocator = std.heap.c_allocator;
 
@@ -146,7 +148,7 @@ export fn {{project}}_free_string(str: ?[*:0]const u8) void {
 //==============================================================================
 
 /// Process an array of data
-export fn {{project}}_process_array(
+pub export fn scaffoldia_process_array(
     handle: ?*Handle,
     buffer: ?[*]const u8,
     len: u32,
@@ -182,7 +184,7 @@ export fn {{project}}_process_array(
 
 /// Get the last error message
 /// Returns null if no error
-export fn {{project}}_last_error() ?[*:0]const u8 {
+pub export fn scaffoldia_last_error() ?[*:0]const u8 {
     const err = last_error orelse return null;
 
     // Return C string (static storage, no need to free)
@@ -196,12 +198,12 @@ export fn {{project}}_last_error() ?[*:0]const u8 {
 //==============================================================================
 
 /// Get the library version
-export fn {{project}}_version() [*:0]const u8 {
+pub export fn scaffoldia_version() [*:0]const u8 {
     return VERSION.ptr;
 }
 
 /// Get build information
-export fn {{project}}_build_info() [*:0]const u8 {
+pub export fn scaffoldia_build_info() [*:0]const u8 {
     return BUILD_INFO.ptr;
 }
 
@@ -210,10 +212,10 @@ export fn {{project}}_build_info() [*:0]const u8 {
 //==============================================================================
 
 /// Callback function type (C ABI)
-pub const Callback = *const fn (u64, u32) callconv(.C) u32;
+pub const Callback = *const fn (u64, u32) callconv(.c) u32;
 
 /// Register a callback
-export fn {{project}}_register_callback(
+pub export fn scaffoldia_register_callback(
     handle: ?*Handle,
     callback: ?Callback,
 ) Result {
@@ -244,7 +246,7 @@ export fn {{project}}_register_callback(
 //==============================================================================
 
 /// Check if handle is initialized
-export fn {{project}}_is_initialized(handle: ?*Handle) u32 {
+pub export fn scaffoldia_is_initialized(handle: ?*Handle) u32 {
     const h = handle orelse return 0;
     return if (h.initialized) 1 else 0;
 }
@@ -254,22 +256,22 @@ export fn {{project}}_is_initialized(handle: ?*Handle) u32 {
 //==============================================================================
 
 test "lifecycle" {
-    const handle = {{project}}_init() orelse return error.InitFailed;
-    defer {{project}}_free(handle);
+    const handle = scaffoldia_init() orelse return error.InitFailed;
+    defer scaffoldia_free(handle);
 
-    try std.testing.expect({{project}}_is_initialized(handle) == 1);
+    try std.testing.expect(scaffoldia_is_initialized(handle) == 1);
 }
 
 test "error handling" {
-    const result = {{project}}_process(null, 0);
+    const result = scaffoldia_process(null, 0);
     try std.testing.expectEqual(Result.null_pointer, result);
 
-    const err = {{project}}_last_error();
+    const err = scaffoldia_last_error();
     try std.testing.expect(err != null);
 }
 
 test "version" {
-    const ver = {{project}}_version();
+    const ver = scaffoldia_version();
     const ver_str = std.mem.span(ver);
     try std.testing.expectEqualStrings(VERSION, ver_str);
 }

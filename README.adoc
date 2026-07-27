@@ -82,9 +82,7 @@ just validate            # structure + metadata checks (RSR shape)
 == Where to go next
 
 * `EXPLAINME.adoc` — the engineering deep-dive: how the pieces actually work.
-* `AFFIRMATION.adoc` — the dated, signed honesty snapshot of the repo's true state.
 * `AUDIT.adoc` — the release audit gate.
-* `.machine_readable/ai/PLACEHOLDERS.adoc` — the full placeholder reference.
 
 == Licence
 
