@@ -1,13 +1,15 @@
 ;; SPDX-License-Identifier: MPL-2.0
-;; Copyright (c) {{CURRENT_YEAR}} {{AUTHOR}} ({{OWNER}}) <{{AUTHOR_EMAIL}}>
+;; Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 ;;
-;; Guix package definition for {{PROJECT_NAME}}
+;; Guix package definition for scaffoldia
 ;;
 ;; Usage:
 ;;   guix shell -D -f guix.scm    # Enter development shell
 ;;   guix build -f guix.scm       # Build package
 ;;
-;; TODO: Replace {{PROJECT_NAME}} and customize inputs for your language/stack.
+;; TODO: real build/check phases (Idris2 + Zig) are not yet wired — see the
+;; `(delete 'build) (delete 'check)` phases below. No Guix toolchain was
+;; available to verify a real build; this stays a stub until it can be.
 ;; See: https://guix.gnu.org/manual/en/html_node/Defining-Packages.html
 
 (use-modules (guix packages)
@@ -18,7 +20,7 @@
              (gnu packages base))
 
 (package
-  (name "{{PROJECT_NAME}}")
+  (name "scaffoldia")
   (version "0.1.0")
   (source (local-file "." "source"
                        #:recursive? #t
@@ -63,9 +65,13 @@
    (list
     ;; TODO: Add runtime dependencies
     ))
-  (home-page "https://github.com/{{OWNER}}/{{PROJECT_NAME}}")
-  (synopsis "{{PROJECT_PURPOSE}}")
-  (description "RSR-compliant project. See README.adoc for details.")
+  (home-page "https://github.com/hyperpolymath/scaffoldia")
+  (synopsis "Full-featured repository designer for the RSR estate")
+  (description "Composes spine, variant pack, features, and profile into new
+repositories, and retrofits existing ones.  Consumes each variant template's
+VARIANT.a2ml contract; sits at the top of the estate's scaffolding stack
+(standards -> rsr-template-repo -> scaffoldia).  See README.adoc for
+details.")
   (license (list
             ;; MPL-2.0 extends MPL-2.0
             mpl2.0)))
