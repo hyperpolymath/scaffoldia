@@ -28,7 +28,7 @@ Inventory snapshot at audit time:
 
 | Placeholder badge tokens in README
 | `README.adoc`
-| `{{OPENSSF_PROJECT_ID}}`, `{{OWNER}}`, `{{REPO}}`
+| `{{OPENSSF_PROJECT_ID}}`, `hyperpolymath`, `scaffoldia`
 | resolved (2026-07-27 instantiation cure)
 | README's badges now use scaffoldia's real identity (`hyperpolymath/scaffoldia`); no placeholder tokens remain.
 | Closed.
