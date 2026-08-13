@@ -15,11 +15,13 @@ K9!
 
 # The component's pedigree (self-description across five layers)
 let component_pedigree = {
+    name = "deploy.k9.ncl",
+    security = { leash = 'Yard },
   # ─────────────────────────────────────────────────────────────
   # L1: The Snout — Identity
   # ─────────────────────────────────────────────────────────────
   metadata = {
-    name = "{{SERVICE_NAME}}-deploy",
+    
     version = "{{VERSION}}",
     breed = "application/vnd.k9+nickel",
     magic_number = "K9!",
@@ -144,7 +146,7 @@ echo "K9: Rollback complete."
 
 # Export the component
 {
-  pedigree = component_pedigree & { name = "{{SERVICE_NAME}}-deploy" },
+  pedigree = component_pedigree & {  },
   deployment = deployment,
   scripts = scripts,
 

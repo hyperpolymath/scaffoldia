@@ -4,9 +4,11 @@ K9!
 version: "0.1"
 
 pedigree = {
+    name = "custom-checks.k9",
+    security = { leash = "Yard" },
   schema_version = "1.0.0",
   metadata = {
-    name = "session-custom-checks",
+    
     version = "0.1.0",
   },
   security = {

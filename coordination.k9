@@ -3,9 +3,11 @@ K9!
 # Thin coordination bindings for central session-management standards
 
 pedigree = {
+    name = "coordination.k9",
+    security = { leash = "Yard" },
   schema_version = "1.0.0",
   metadata = {
-    name = "coordination",
+    
     version = "1.0.0",
   },
   security = {
