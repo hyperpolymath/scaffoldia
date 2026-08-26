@@ -5,7 +5,7 @@
 # Reads root-hygiene rules and auto-fixes what it can:
 #   - Delete banned files (AI.djot, duplicate CONTRIBUTING.adoc, stale snapshots)
 #   - Rename misnamed files (AI.a2ml → 0-AI-MANIFEST.a2ml)
-#   - Fix SPDX headers (AGPL → PMPL in dotfiles)
+#   - Flag AGPL SPDX headers for MANUAL review (never auto-edited -- see A2)
 #   - Create missing required files (SECURITY.md, CONTRIBUTING.md)
 #   - Report unfixable issues as PR comments
 #
@@ -84,8 +84,13 @@ jobs:
           # --- 4. Fix SPDX headers in dotfiles ---
           for dotfile in .gitignore .gitattributes .editorconfig; do
             if [ -f "$dotfile" ] && grep -q "AGPL-3.0" "$dotfile" 2>/dev/null; then
-              sed -i 's/AGPL-3.0-or-later/MPL-2.0/g; s/AGPL-3.0/MPL-2.0/g' "$dotfile"
-              FIXES="$FIXES\n- Fixed SPDX header in \`$dotfile\` (AGPL → PMPL)"
+              # WARN ONLY -- never edit. LICENCE-POLICY.adoc A2: "No automated or
+              # bulk SPDX/licence change (sed sweep, script, agent pass) on any
+              # estate repo, ever." AGPL is CORRECT in this estate for Rule 3
+              # (co-developed with family) and Rule 5 (games), so rewriting it
+              # would undo deliberate policy, not fix drift.
+              echo "::warning::$dotfile carries an AGPL-3.0 SPDX header. If that is wrong it must be fixed MANUALLY (owner-only, never auto-edited). AGPL is correct under LICENCE-POLICY Rule 3 and Rule 5."
+              FIXES="$FIXES\n- ⚠️ \`$dotfile\` carries AGPL-3.0 — flagged for manual owner review, NOT changed"
               CHANGED=true
             fi
           done
