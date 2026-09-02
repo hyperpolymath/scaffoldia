@@ -86,7 +86,7 @@ just install prefix=/usr/local
 
 == Security Notes
 
-* License: MPL-2.0 (Palimpsest MPL — see docs/legal/EXHIBIT-A-ETHICAL-USE.txt, docs/legal/EXHIBIT-B-QUANTUM-SAFE.txt)
+* License: MPL-2.0 (see docs/legal/EXHIBIT-A-ETHICAL-USE.txt, docs/legal/EXHIBIT-B-QUANTUM-SAFE.txt for non-binding supplementary guidelines)
 * All dependencies SHA-pinned
 * `panic-attacker` scan results: link:../reports/security/README.adoc[]
 * OpenSSF Scorecard: see badge in README
