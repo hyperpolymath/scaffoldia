@@ -39,8 +39,8 @@ validation and orchestration, at the three security levels described in that
 directory.
 `bot_directives/`:: Methodology-aware configuration read by AI agents at
 session start.
-`ai/`:: AI-facing guidance files (`CLAUDE.md`, `GEMINI.md`, `AI.a2ml` and
-kin).
+`ai/`:: AI-facing guidance files: `AI.a2ml`, `0.2-AI-MANIFEST.a2ml`, and
+the per-tool rule files `.clinerules`, `.cursorrules` and `.windsurfrules`.
 `policies/`:: Maintenance axes, the maintenance checklist, and the software
 development approach.
 `configs/`:: Per-tool configuration for the repository's own toolchain.
