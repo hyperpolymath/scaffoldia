@@ -15,7 +15,7 @@ https://github.com/hyperpolymath/standards[hyperpolymath/standards]. That
 document is the only place the syntax, semantics and typechecking rules are
 defined. Every other mention of the format across the estate — including every
 README in this tree — is a *pointer* to it, never a restatement.
-
+\nThe one sentence that follows is a deliberate, *non-normative* reminder. It is\nrepeated across this tree because its absence from the family's documentation is\nthe measured cause of the TOML-shaped divergence now found across the estate.\nWhere it and the spec ever disagree, the spec governs and this sentence is the\nerror.\n
 DEED is an *s-expression* format: there is no `key = value` production and no
 `[section]` production; the only bracket is `(`.
 
