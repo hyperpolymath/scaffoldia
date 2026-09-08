@@ -1,3 +1,58 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = .machine_readable Pillar
+:toc:
+
+This pillar holds the repository's machine-readable records: what lets tools
+and agents read this project's state, boundaries and obligations without
+parsing prose.
+
+[IMPORTANT]
+====
+*Single normative source.* The grammar for the record family in this pillar is
+`deed/spec/DEED-GRAMMAR-SPEC.adoc` in
+https://github.com/hyperpolymath/standards[hyperpolymath/standards]. That
+document is the only place the syntax, semantics and typechecking rules are
+defined. Every other mention of the format across the estate — including every
+README in this tree — is a *pointer* to it, never a restatement.
+\nThe one sentence that follows is a deliberate, *non-normative* reminder. It is\nrepeated across this tree because its absence from the family's documentation is\nthe measured cause of the TOML-shaped divergence now found across the estate.\nWhere it and the spec ever disagree, the spec governs and this sentence is the\nerror.\n
+DEED is an *s-expression* format: there is no `key = value` production and no
+`[section]` production; the only bracket is `(`.
+
+The format formerly called A2ML is now *DEED* (`.deed`). Files here still carry
+`.a2ml` pending a single atomic estate-wide rename; do not hand-convert them.
+
+The spec path above lands when
+https://github.com/hyperpolymath/standards/pull/752[standards PR #752] merges;
+until then it exists only on that pull request's branch.
+====
+
+== Contents
+
+`descriptiles/`:: What this repository *is* and what state it is *in* — the
+six ruled descriptiles, plus `anchors/` and the files recorded there as open
+work.
+`contractiles/`:: What this repository is *obliged* to be — the Must, Trust,
+Adjust and Intent files, with `bust/` and `dust/` for failure and recovery.
+`self-validating/`:: K9 contractiles: Nickel components that carry their own
+validation and orchestration, at the three security levels described in that
+directory.
+`bot_directives/`:: Methodology-aware configuration read by AI agents at
+session start.
+`ai/`:: AI-facing guidance files: `AI.a2ml`, `0.2-AI-MANIFEST.a2ml`, and
+the per-tool rule files `.clinerules`, `.cursorrules` and `.windsurfrules`.
+`policies/`:: Maintenance axes, the maintenance checklist, and the software
+development approach.
+`configs/`:: Per-tool configuration for the repository's own toolchain.
+`integrations/`:: Records of the external services this repository speaks to.
+`compliance/`:: Licensing and dependency-policy inputs — `reuse/dep5` and the
+Rust `deny.toml`.
+`scripts/`:: Forge, lifecycle, maintenance and verification scripts.
+`ENSAID_CONFIG.a2ml`:: Per-repo configuration for PanLL and eNSAID-compatible
+tools.
+`root-allow.txt`:: The canonical allowlist of entries permitted at the
+repository root.
+
+The AI-manifest files (`0.1-AI-MANIFEST.a2ml` here, `0.2-AI-MANIFEST.a2ml` in
+several subdirectories, `0-AI-MANIFEST.a2ml` under `descriptiles/`) use more
+than one numbering scheme. That inconsistency is recorded, not resolved here.
