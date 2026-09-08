@@ -1,30 +1,85 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-# A2ML descriptiles Directory
+= descriptiles
+:toc:
 
-This directory contains the 6 core A2ML machine-readable metadata files for this repository.
+Descriptiles record what this repository *is* and what state it is *in* — the
+descriptive half of the descriptile/contractile pair. The contractiles beside
+them, in `../contractiles/`, record what it is *obliged* to be.
 
-## Files
+[IMPORTANT]
+====
+*Single normative source.* The grammar for this record family is
+`deed/spec/DEED-GRAMMAR-SPEC.adoc` in
+https://github.com/hyperpolymath/standards[hyperpolymath/standards]. That
+document is the only place the syntax, semantics and typechecking rules are
+defined. Every other mention of the format across the estate — this README
+included — is a *pointer* to it, never a restatement.
 
-- `AGENTIC.a2ml` - AI agent operational gating, safety controls
-- `ECOSYSTEM.a2ml` - Project ecosystem position, relationships, explicit boundaries
-- `META.a2ml` - Architecture decisions (ADRs), development practices, design rationale
-- `NEUROSYM.a2ml` - Symbolic semantics, composition algebra
-- `PLAYBOOK.a2ml` - Executable plans, operational runbooks
-- `STATE.a2ml` - Project state, phase, milestones, session history
+DEED is an *s-expression* format. There is *no* `key = value` production and
+*no* `[section]` production; the only bracket is `(`. That sentence is stated
+explicitly because its absence from the family's documentation is the measured
+cause of the TOML-shaped divergence now found across the estate.
 
-## Standards Compliance
+The format formerly called A2ML is now *DEED* (`.deed`). The files listed below
+still carry `.a2ml` pending a single atomic estate-wide rename; do not
+hand-convert them.
 
-These files follow the A2ML Format Family specification from:
-https://github.com/hyperpolymath/standards/tree/main/a2ml
+The spec path above lands when
+https://github.com/hyperpolymath/standards/pull/752[standards PR #752] merges.
+Until then that document exists only on the pull request's branch and the link
+will not resolve.
+====
 
-## Generation
+== Contents
 
-These files may be generated from .scm source files using transpilation tools.
-Source .scm files should be removed after successful transpilation.
+The six ruled descriptiles:
 
-## See Also
+`AGENTIC.a2ml`:: AI agent operational gating and safety controls.
+`ECOSYSTEM.a2ml`:: Ecosystem position, relationships, explicit boundaries.
+`META.a2ml`:: Architecture decisions (ADRs), development practices, design
+rationale.
+`NEUROSYM.a2ml`:: Symbolic semantics and composition algebra.
+`PLAYBOOK.a2ml`:: Executable plans and operational runbooks.
+`STATE.a2ml`:: Project state, phase, milestones, session history.
 
-- [A2ML Repository Template](https://github.com/hyperpolymath/standards/blob/main/A2ML-REPO-TEMPLATE.adoc)
-- [6A2 Format Family](https://github.com/hyperpolymath/standards#a2ml-format-family-7-formats)
+Also present in this directory, and *not* among the six. Each is recorded here
+as open work rather than described as settled:
 
+`0-AI-MANIFEST.a2ml`:: One of the AI-manifest family, which this pillar carries
+at several levels under two different numbering schemes (`0-`, `0.1-`, `0.2-`).
+Its placement and numbering are unsettled and are not governed by the
+descriptile ruling.
+`CLADE.a2ml`:: Retained under its v1 name. "Clade" is ruled the wrong word — it
+asserts a common descent the classification does not carry — and the file is
+scheduled to become a `*_chora.deed`. That transition has not happened in this
+repository.
+`anchors/`:: Holds `ANCHOR.a2ml`. ANCHOR is ruled to be *both* descriptile and
+contractile: it states an observed drift (descriptive) and issues a mandated
+realignment (normative). It is the join between the two halves and awaits its
+own specification.
+
+== Generation
+
+These files may be generated from `.scm` source files by transpilation.
+
+[NOTE]
+====
+Earlier text here instructed that `.scm` sources be deleted after successful
+transpilation. That instruction is *withdrawn pending reconciliation*: the
+s-expression form is a sanctioned surface dialect of this family in its own
+right, not a transient build input. Do not delete `.scm` sources on the
+strength of this README.
+====
+
+== See Also
+
+* https://github.com/hyperpolymath/standards/blob/main/A2ML-REPO-TEMPLATE.adoc[Repository
+  template] — link verified live.
+* https://github.com/hyperpolymath/standards#a2ml-format-family-7-formats[Format
+  family overview] — link verified live. Earlier text labelled this the "6A2
+  Format Family"; "6A2" is deprecated, and the target names seven formats.
+
+The v1 text also cited `standards/tree/main/a2ml`. That subtree no longer
+exists on `origin/main`, so the citation is dropped; the grammar pointer above
+replaces it.

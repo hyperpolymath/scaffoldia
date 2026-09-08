@@ -4,6 +4,28 @@
 :toc:
 :sectnums:
 
+[IMPORTANT]
+====
+*Single normative source.* The grammar for the files described below is
+`deed/spec/DEED-GRAMMAR-SPEC.adoc` in
+https://github.com/hyperpolymath/standards[hyperpolymath/standards] — the only
+place the syntax, semantics and typechecking rules are defined. DEED is an
+*s-expression* format: there is no `key = value` production and no `[section]`
+production; the only bracket is `(`. The format formerly called A2ML is now
+*DEED* (`.deed`); the files here still carry `.a2ml` pending a single atomic
+estate-wide rename, so do not hand-convert them. That spec path lands when
+https://github.com/hyperpolymath/standards/pull/752[standards PR #752] merges.
+
+*Unresolved citations, recorded not repaired.* The Contents list below names
+`must/Mustfile`, `trust/Trustfile.hs`, `dust/Dustfile` and `intend/Intentfile`.
+None of those four paths exists in this directory. What is actually here is
+`Mustfile.a2ml`, `Trustfile.a2ml`, `Adjustfile.a2ml` and `Intentfile.a2ml` at
+the top level, `bust/Bustfile.a2ml`, `dust/Dustfile.a2ml`, and a `Justfile`.
+The verb-directory layout, the `.hs` extension and the missing Adjust and Bust
+entries are each open work under the contractile layout and extension rulings;
+the list is left as published rather than silently rewritten.
+====
+
 This directory contains the generalized contractiles templates. Copy the `.machine_readable/contractiles/` directory into a new repo to establish a consistent operational, validation, trust, recovery, and intent framework.
 
 == Fill-In Instructions
