@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= LLM Warmup — rsr-template-repo (User)
+= LLM Warmup — scaffoldia (User)
 
-== What is rsr-template-repo?
+== What is scaffoldia?
 
-See `README.adoc` for overview.
+See `README.adoc` for overview. There is no installable end-user application
+yet (design phase) — see `docs/onboarding/QUICKSTART-USER.adoc`.
 
 == Key Commands
 
-* `just setup` — set up development environment
-* `just build` — build the project
+* `just build` — build the project (Idris2 ABI + Zig FFI)
 * `just test` — run tests
 * `just doctor` — diagnose issues
-* `just heal` — attempt auto-repair
 
 == Quick Context
 

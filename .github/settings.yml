@@ -6,15 +6,13 @@
 # This file defines repository-level configuration that is automatically
 # applied by the probot/settings app when changes are pushed to the default
 # branch. Install the app at: https://github.com/apps/settings
-#
-# Template file — replace {{REPO}} and {{DESCRIPTION}} with actual values.
 
 # ─── Repository Settings ───────────────────────────────────────────────────────
 
 repository:
-  name: "{{REPO}}"
-  description: "{{DESCRIPTION}}"
-  homepage: "https://github.com/hyperpolymath/{{REPO}}"
+  name: "scaffoldia"
+  description: "Full-featured repository designer for the RSR estate: composes spine × variant pack × features × profile into new repos and retrofits existing ones."
+  homepage: "https://github.com/hyperpolymath/scaffoldia"
   private: false
   has_issues: true
   has_projects: true

@@ -11,13 +11,13 @@ v1.0, 2026-04-07
 
 Audit scope:
 
-* Repository: `rsr-template-repo`
+* Repository: `scaffoldia`
 * Focus: root authority docs/manifests, Justfile integration, session bindings
 * Recursive inventory method: `rg --files -g '!.git' | sort`
 
 Inventory snapshot at audit time:
 
-* `rsr-template-repo` total tracked files discovered: `240`
+* `scaffoldia` total tracked files discovered: `240`
 * Session-local binding files discovered: `4` under `session/` plus `coordination.k9`
 
 == Claim Vs Actual
@@ -29,9 +29,9 @@ Inventory snapshot at audit time:
 | Placeholder badge tokens in README
 | `README.adoc`
 | `{{OPENSSF_PROJECT_ID}}`, `{{OWNER}}`, `{{REPO}}`
-| placeholder
-| Template placeholders are intentional pre-bootstrap content.
-| Keep; document clearly as template tokens.
+| resolved (2026-07-27 instantiation cure)
+| README's badges now use scaffoldia's real identity (`hyperpolymath/scaffoldia`); no placeholder tokens remain.
+| Closed.
 
 | Docs links used `.adoc` files not present
 | legacy `README.adoc` (pre-migration)
@@ -130,7 +130,7 @@ Inventory snapshot at audit time:
 * Any future full protocol text drafts should move to
   `standards/session-management-standards/`.
 
-=== Stay In `rsr-template-repo`
+=== Stay In `scaffoldia`
 
 * Local aliases, hooks, coordination wiring, and repo-local checks.
 
@@ -152,7 +152,7 @@ Current status:
 
 [source,text]
 ----
-rsr-template-repo/
+scaffoldia/
   README.adoc
   AUDIT.adoc
   0-AI-MANIFEST.a2ml

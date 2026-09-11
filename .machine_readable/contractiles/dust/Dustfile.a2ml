@@ -1,18 +1,20 @@
 # SPDX-License-Identifier: MPL-2.0
-# Dustfile — Cleanup and hygiene contract for rsr-template-repo
+# Dustfile — Cleanup and hygiene contract for scaffoldia
 # Author: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 #
 # Paired runner: dust.ncl
 # Verb:          dust
 # Semantics:     What should be cleaned up. Housekeeping, not blockers.
 #
-# This repository: rsr-template-repo is the canonical template.
-# Cleanup items here ensure the template itself remains pristine.
+# This repository: scaffoldia, instantiated from rsr-template-repo (the
+# canonical template). Cleanup items here ensure this repository — and any
+# rsr-*-template-repo copies it composes/retrofits — remain pristine.
 
 @abstract:
-Cleanup and hygiene items for rsr-template-repo. These are maintenance tasks
-that ensure the template repository remains clean and ready for distribution
-to new repositories.
+Cleanup and hygiene items for scaffoldia. These are maintenance tasks
+that ensure the repository remains clean, plus (per scaffoldia's own
+composer/retrofit role) that generated/retrofitted downstream repos stay
+clean too.
 @end
 
 ## Stale Files

@@ -20,7 +20,7 @@ K9!
       name = "setup-repo",
       version = "1.0.0",
       description = "Automated repository setup with RSR standards",
-      author = "{{AUTHOR}} <{{AUTHOR_EMAIL}}>",
+      author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>",
     },
     warnings = [
       "This component has full system access",
@@ -104,8 +104,8 @@ K9!
       description = "Initialize Git repository",
       commands = [
         "git init -b %{config.git.default_branch}",
-        "git config user.name '{{AUTHOR}}'",
-        "git config user.email '{{AUTHOR_EMAIL}}'",
+        "git config user.name 'Jonathan D.A. Jewell'",
+        "git config user.email 'j.d.a.jewell@open.ac.uk'",
         "echo '✓ Git initialized'",
       ],
     },
@@ -130,9 +130,11 @@ K9!
     },
 
     "add-license" = {
-      description = "Add PMPL-1.0 license",
+      description = "Add MPL-2.0 license",
       commands = [
-        "curl -sL https://raw.githubusercontent.com/{{OWNER}}/pmpl/main/LICENSE -o LICENSE",
+        "curl -sSfL https://www.mozilla.org/media/MPL/2.0/index.txt -o LICENSE.tmp",
+        "grep -q 'Mozilla Public License Version 2.0' LICENSE.tmp",
+        "mv LICENSE.tmp LICENSE",
         "echo '✓ License added'",
       ],
     },
