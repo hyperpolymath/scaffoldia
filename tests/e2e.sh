@@ -84,16 +84,16 @@ green "  zig found: $(command -v zig)"
 echo ""
 
 # ─── Section 1: Idris2 ABI build ──────────────────────────────────────
-bold "Section 1: Idris2 ABI (abi.ipkg)"
+bold "Section 1: Idris2 ABI (src/interface/abi.ipkg)"
 
 cd "$PROJECT_DIR"
-if IDRIS_OUTPUT=$(idris2 --build abi.ipkg 2>&1); then
+if IDRIS_OUTPUT=$(idris2 --build src/interface/abi.ipkg 2>&1); then
     # A from-scratch build prints "N/M: Building ..." lines; an incremental
     # no-op rebuild prints nothing at all — both are success (exit 0).
-    green "  PASS: idris2 --build abi.ipkg"
+    green "  PASS: idris2 --build src/interface/abi.ipkg"
     PASS=$((PASS + 1))
 else
-    red "  FAIL: idris2 --build abi.ipkg"
+    red "  FAIL: idris2 --build src/interface/abi.ipkg"
     echo "$IDRIS_OUTPUT" | tail -20
     FAIL=$((FAIL + 1))
 fi

@@ -23,12 +23,11 @@ CONTRIBUTING.md            # REQUIRED AT ROOT by scorecard-enforcer/openssf-comp
 SECURITY.md                # REQUIRED AT ROOT by scorecard-enforcer CI + the security-policy contractile (test -f SECURITY.md). See CONTRIBUTING.md note re: the .github/ copy.
 LICENSE
 LICENSES/                  # REUSE licence texts (MPL-2.0.txt + CC-BY-SA-4.0.txt) for the dual-licence model (code MPL-2.0 / docs CC-BY-SA-4.0)
-CHANGELOG.md
+CHANGELOG.adoc             # AsciiDoc is the estate-standard documentation format
 
 # ─── Build entry points (must live at root for their tooling) ────────────────
 Justfile                   # delegates phases to build/just/*.just
 coordination.k9            # repo-local session binding (template-mandated)
-abi.ipkg                   # Idris2 package for the ABI seam; sourcedir=src/interface (estate canon: root-level *-abi.ipkg). Single case-consistent src/interface/Abi/ dir. Typecheck: `idris2 --typecheck abi.ipkg`.
 
 # ─── Conventional dotfiles (tool-required at root) ───────────────────────────
 .editorconfig
@@ -40,7 +39,8 @@ abi.ipkg                   # Idris2 package for the ABI seam; sourcedir=src/inte
 # ─── Directories ─────────────────────────────────────────────────────────────
 .devcontainer/             # VS Code dev container spec; tool-required at root
 .git/
-.github/                   # CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/
+.github/                   # CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/, hooks/
+www/                       # site-operations bundle; canonical .well-known/ lives at www/.well-known/ (issue #53)
 .machine_readable/         # AI manifests, contractiles, custom-format configs
 .well-known/
 build/                     # contractile.just, setup.sh, flake.{nix,lock}, guix.scm, .guix-channel, Containerfile

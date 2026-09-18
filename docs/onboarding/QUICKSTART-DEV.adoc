@@ -40,7 +40,7 @@ just setup-dev
 
 [source,bash]
 ----
-idris2 --build abi.ipkg
+idris2 --build src/interface/abi.ipkg
 cd src/interface/ffi && zig build
 ----
 
@@ -48,7 +48,7 @@ cd src/interface/ffi && zig build
 
 [source,bash]
 ----
-idris2 --typecheck abi.ipkg
+idris2 --typecheck src/interface/abi.ipkg
 cd src/interface/ffi && zig build test --summary all
 ----
 

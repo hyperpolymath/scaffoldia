@@ -42,7 +42,7 @@ cd scaffoldia
 just build
 ----
 
-This builds the typed ABI (Idris2, `abi.ipkg`) and the FFI implementation
+This builds the typed ABI (Idris2, `src/interface/abi.ipkg`) and the FFI implementation
 (Zig, `src/interface/ffi/`) into a static library. There is no interactive
 application to run yet.
 

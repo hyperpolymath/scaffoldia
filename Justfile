@@ -83,14 +83,14 @@ import? "build/just/assess.just"
 # Build the project (debug mode)
 build *args:
     @echo "Building {{project}} (debug)..."
-    idris2 --build abi.ipkg
+    idris2 --build src/interface/abi.ipkg
     cd src/interface/ffi && zig build {{args}}
     @echo "Build complete"
 
 # Build in release mode with optimizations
 build-release *args:
     @echo "Building {{project}} (release)..."
-    idris2 --build abi.ipkg
+    idris2 --build src/interface/abi.ipkg
     cd src/interface/ffi && zig build -Doptimize=ReleaseFast {{args}}
     @echo "Release build complete"
 
@@ -123,20 +123,20 @@ clean-all: clean
 # Run all tests
 test *args:
     @echo "Running tests..."
-    idris2 --typecheck abi.ipkg
+    idris2 --typecheck src/interface/abi.ipkg
     cd src/interface/ffi && zig build test {{args}}
     @echo "Tests passed!"
 
 # Run tests with verbose output
 test-verbose:
     @echo "Running tests (verbose)..."
-    idris2 --typecheck abi.ipkg
+    idris2 --typecheck src/interface/abi.ipkg
     cd src/interface/ffi && zig build test --summary all
 
 # Smoke test — compiles without running the test suite
 test-smoke:
     @echo "Smoke test..."
-    idris2 --typecheck abi.ipkg
+    idris2 --typecheck src/interface/abi.ipkg
     cd src/interface/ffi && zig build
 
 # Run end-to-end tests (full pipeline: build → run → verify)
@@ -204,7 +204,7 @@ fmt-check:
 # build are where real warnings/errors from either toolchain surface.
 lint:
     @echo "Linting source files..."
-    idris2 --typecheck abi.ipkg
+    idris2 --typecheck src/interface/abi.ipkg
     cd src/interface/ffi && zig build
 
 # ═══════════════════════════════════════════════════════════════════════════════
