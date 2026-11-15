@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Scaffoldia Architecture
+:toc:
+
+== Current implementation boundary
+
+Scaffoldia is a repository design and retrofit project in the design phase.
+The repository presently supplies governance metadata, workflow automation
+and independently buildable Idris2 and Zig modules. The actual composer,
+repository mint operation, retrofit planner and linked ABI are not yet
+implemented or qualified.
+
+== Existing directory layout
+
+* `src/` contains source pillars and a generic inherited foreign-function
+  interface scaffold; it does not contain a functioning composition engine.
+* `tests/` contains existing compiler, Zig and source-scope test harnesses.
+* `docs/architecture/` contains this introduction, the component topology,
+  and the source threat model.
+* `.machine_readable/` holds repository machine metadata, some of which
+  is obsolete A2ML awaiting controlled migration to DEED.
+* `.github/workflows/` contains automation whose individual checks
+  must run and report their true state.
+
+== Contracts and limits
+
+Read link:TOPOLOGY.adoc[TOPOLOGY.adoc] for the owning canon/spine/proven
+boundaries, missing interfaces and the ABI mismatch. Read
+link:THREAT-MODEL.adoc[THREAT-MODEL.adoc] for threats and mitigations.
+The currently proposed engine decision is
+link:../decisions/0002-scaffoldia-composer-architecture.adoc[ADR-0002].
+Nothing here certifies that the composer works or that its ABI is linked.
