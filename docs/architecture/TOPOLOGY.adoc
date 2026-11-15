@@ -1,36 +1,107 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Last updated: 2026-04-04
-= Architecture Topology
+= Scaffoldia Architecture Topology
+:toc:
+:sectnums:
 
-== System Overview
+== Verified baseline (2026-11-15)
 
-RSR (Rhodium Standard Repository) template provides the canonical scaffold for all hyperpolymath projects, with integrated CI/CD, documentation, and service discovery patterns.
+Inspection base: `hyperpolymath/scaffoldia` main commit
+`84e13a6e8b41e12026f2a5cbbd97fb91fc3fa849`.
+This describes observed source, not a completed runtime.
+`.machine_readable/descriptiles/STATE.a2ml` records 5% completion and design phase.
 
-== Component Overview
+== Ownership boundaries
 
-[cols="1,1,2", options="header"]
+[cols="1,2,3",options="header"]
 |===
-| Component | Language | Purpose
+| Layer | Repository | Authority / output
 
-| dogfood-gate workflow | YAML | Quality checks (CRG, security, linting)
-| eclexiaiser-validate job | YAML | Resource cost awareness scoring
-| Groove discovery | JSON | Service endpoint registration
+| Canon | `metadatastician/standards` | RSR criteria, format rules, template-capability-gates.toml, scaffold lifecycle
+| Spine | `hyperpolymath/rsr-template-repo` | `repo-init`, pinned base tree, `archetypes/<name>/<name>_praxis.deed`, overlays, lock fragments, deed clauses
+| Composer | `hyperpolymath/scaffoldia` | Future deterministic composition, dry-run mint and retrofit plans, apply and reconciliation receipts
+| Oracle | `hyperpolymath/hypatia` | Conformance scoring; Scaffoldia must not redefine scoring
+| Sustain | `hyperpolymath/gitbot-fleet` and `hyperpolymath/reposystem` | Audit-first corrective campaigns and owner-gated application
 |===
 
-== Data Flow
+The normative lifecycle is `metadatastician/standards/0-canon/rsr/SCAFFOLD-LIFECYCLE.adoc`
+and the spine's accepted ADR-0002/0003. The upstream ADRs were amended
+2026-10-06: standalone `VARIANT.a2ml` and `ARCHETYPE.a2ml` files are
+superseded by `*_chora.deed` clauses and archetype `*_praxis.deed`.
+Scaffoldia consumes these schemas; it does not fork their definitions.
 
+== Present repository components (not a composer)
+
+[cols="2,3,2",options="header"]
+|===
+| Path | Present code/data | Status
+
+| `src/core`, `src/contracts`, `src/bridges`, `src/definitions`, `src/errors` | AI manifests/READMEs only | No composition engine
+| `machine-readable-design/harvested-registry` | Seven legacy Nickel registry inputs | Data only; not live packs
+| `src/interface/Abi/` | Generic Idris2 foreign declarations and type/layout model | Not matched to Zig exports
+| `src/interface/ffi/` | Zig exported scaffold functions and unit/integration tests | No composer operations; Zig-side tests only
+| `verification/proofs/` | Example/skeleton proof artifacts | No linked composer assurance
+| `tests/` | Shell E2E, aspect, workflow tests | No actual mint/retrofit acceptance test
+| `.github/workflows/` | 25 YAML workflows, actions.lock | Multiple pre-existing CI failures
+| `.machine_readable/`, `build/`, `Justfile` | RSR substrate and task recipes | Some checks refer to removed/moved paths
+|===
+
+The `developer-ecosystem/scaffoldia` historical Haskell CLI + Nickel
+builder is dormant, not an alternate implementation authority. Its CLI
+`init` and `build` paths do not invoke the actual composer; the registry
+is suitable for reviewed harvesting only.
+
+== Required operational seams (proposed)
+
+[source,text]
 ----
-[Code Push] → [GitHub Actions] → [hypatia scan] → [eclexiaiser validate] → [Results]
+Canon (version + gates) ------.
+Spine (pin + deeds + overlays) +--> validated SourceSnapshot
+Identity + capability request -'            |
+                                         CompositionPlan
+                                     / deterministic / dry-run
+                                    /                      \
+                             Mint adapter            Retrofit adapter
+                                    \                      /
+                              Reconciliation/ExecutionReceipt
+                                          |
+                      provenance + Hypatia + fleet proposal
 ----
 
-== Integration Points
+* Ingest: pinned canon/spine snapshots, exact deed contracts and overlays;
+  reject unknown capability, unpinned inputs and invalid paths.
+* Plan: deterministic ordering; detect duplicate and overlapping path claims;
+  emit explicit conflicts; never silent last-writer-wins.
+* Apply: sandboxed file staging, no remote mutation by default; authorisation
+  required for real repository modification and all forge configuration.
+* Reconcile: compare pinned base, current child, and desired child; preserve
+  unrelated user edits; report conflicts rather than overwrite.
+* Observe: test/build/hypatia/drift evidence and outcome receipts. A skipped
+  or absent check cannot be reported as passing.
 
-* *Upstream*: Hypatia (neurosymbolic CI/CD), eclexiaiser (resource scoring)
-* *Downstream*: All RSR-based repositories (500+ instances)
+These are interfaces to implement, not capabilities claimed present.
 
-== Deployment
+== ABI/FFI blocker
 
-* Container: Stapeln Six ecosystem
-* CI/CD: GitHub Actions → Hypatia scan → eclexiaiser-validate (6 scorecard dimensions) → Mirror
-* Service Discovery: Groove protocol (.well-known/groove/manifest.json)
+`src/interface/Abi/Foreign.idr` imports C symbols `rsr_init`,
+`rsr_free`, `rsr_process`; Zig exports `scaffoldia_init`,
+`scaffoldia_free`, `scaffoldia_process`. Their result semantics differ.
+The Idris2 platform model is a simplified 64-bit template, including
+inapplicable generalisations. The Zig integration tests import Zig directly;
+they do not link Idris2 calls through the C ABI. The interface is therefore
+not verified and must not be called 'proven' before an end-to-end link test.
+ADR-0002 leaves retention/retirement of this optional seam open.
+
+== Existing CI debt (observed on base commit)
+
+* Well-known enforcement ignores existing `www/.well-known/security.txt`.
+* Workflow linter's first-line SPDX check rejects managed lockfile headers,
+  then its literal SHA-only rule conflicts with actions.lock's tag-to-SHA map.
+* Static analysis gate produced startup_failure; investigate workflow
+  permissions, allowlist and pinned reusable workflows separately.
+* Some reusables still refer to `hyperpolymath/standards` while the live
+  canon is `metadatastician/standards`.
+* The `e2e.yml` job invokes a script requiring Idris2 and Zig without
+  explicit toolchain provisioning.
+
+Do not suppress failures to create a green summary. Fix at the owning layer
+and verify the first real passing and deliberately failing checks.
