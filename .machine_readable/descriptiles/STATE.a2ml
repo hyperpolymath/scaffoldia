@@ -8,12 +8,12 @@
 [metadata]
 project = "scaffoldia"
 version = "0.1.0"
-last-updated = "2026-07-21"
+last-updated = "2026-11-15"
 status = "active"  # active | paused | archived
 
 [project-context]
 name = "scaffoldia"
-purpose = "Full-featured repository designer for the RSR estate: composes spine@pin x variant pack x features x profile into new repos, and retrofits existing ones (owner mandate 2026-07-07: composer + retrofit from day one). Sits above rsr-template-repo (`just init`, basic) in the scaffolding stack; consumes variant contracts (VARIANT.a2ml, ADR-0002 in rsr-template-repo) as data."
+purpose = "Full-featured repository designer for the RSR estate: composes spine@pin x archetype/pack x features x capability profile into new repos and retrofits existing ones. Must consume the spine current deed-based archetype, variant, provenance and mint-answer contracts (rsr-template-repo ADR-0002/0003, partly superseded 2026-10-06); cannot invent a second format."
 completion-percentage = 5
 
 [position]
@@ -23,30 +23,32 @@ maturity = "experimental"  # experimental | alpha | beta | production | lts
 [route-to-mvp]
 milestones = [
   { name = "Phase 0: RSR shell extracted from reposystem (2026-06-26), identity + hygiene", completion = 90 },
-  { name = "Phase 1: composer design ADR (compose spine@pin x pack x features x profile)", completion = 0 },
-  { name = "Phase 2: consume VARIANT.a2ml contracts as pack definitions (julia = first pack)", completion = 0 },
+  { name = "Phase 1: proposed composer design ADR; decision and review outstanding", completion = 0 },
+  { name = "Phase 2: parse spine praxis deeds, repo deed clauses, overlays and capability profile; julia-library first", completion = 0 },
   { name = "Phase 3: retrofit engine (pack-diff against existing repos)", completion = 0 },
   { name = "Phase 4: template-maintenance sync loop (regenerate rsr-*-template-repo family until cut-off)", completion = 0 },
 ]
 
 [blockers-and-issues]
 issues = [
-  "Composer design ADR pending — MUST explicitly weigh the dormant GitLab-lineage implementation (developer-ecosystem/scaffoldia: Haskell CLI + Nickel builder), not ignore it; fork resolved 2026-07-21: this repo is canonical, engine dormant, registry harvested (machine-readable-design/harvested-registry/)",
+  "Composer ADR-0002 proposed, not accepted: must compare dormant Haskell/Nickel, Rust core, and ABI/FFI options against working evidence; canonical repo is here, historical registry harvested as untrusted source data",
+  "Current source tree has no core composer, mint planner, retrofit engine or working cross-language ABI; CI and local validators contain stale template assumptions",
+  "Current canonical contract is deed-based; old VARIANT.a2ml / ARCHETYPE.a2ml references are superseded in part by rsr-template-repo ADR-0002/0003 (2026-10-06)",
   "repo-batcher absorption (reposystem#56 V->Zig port) undecided — revisit after composer v0.1",
 ]
 
 [critical-next-actions]
 actions = [
-  "Author composer design ADR (consume VARIANT.a2ml/ARCHETYPE.a2ml; weigh dormant Haskell+Nickel engine; two distribution paths stay coherent)",
-  "Define pack format derived from the spine contracts (rsr-template-repo archetypes/ per ADR-0003 + rsr-julia-library-template-repo VARIANT.a2ml = references; harvested-registry entries = input data)",
-  "Decide src/ pillar implementation approach (current Idris2+Zig ABI seam is inherited scaffold)",
+  "Review ADR-0002 against current standards and spine; select engine via working spike without creating a competing contract schema",
+  "Implement pinned-source and deed/archetype readers, deterministic plan and dry-run, then mint and retrofit using one planner",
+  "Reconcile validation/CI failures; prove any retained Idris2-Zig ABI using real linked symbol and behaviour tests, or retire unused seam",
 ]
 
 [fork-resolution]
 # Two scaffoldia codebases existed with no recorded relationship. Resolved
 # 2026-07-21 (see machine-readable-design/harvested-registry/README.adoc):
 decision = "this repo = canonical design surface + consumer of spine contracts; developer-ecosystem/scaffoldia (GitLab lineage, implemented Haskell CLI + Nickel builder) = dormant engine, registry harvested as data, no parallel development"
-profile-axis = "resolved: profile = capability set per standards template-capability-gates.toml (preset or direct list), i.e. what rsr-profile.a2ml declares (ADR-0003)"
+profile-axis = "capability set from metadatastician/standards .machine_readable/template-capability-gates.toml; written as (rsr-profile) in the repository deed by current spine repo-init"
 
 [maintenance-status]
 last-run-utc = "never"
@@ -57,4 +59,4 @@ open-failures = 0
 
 [ecosystem]
 part-of = ["RSR Framework", "scaffolding stack (standards -> rsr-template-repo -> scaffoldia)"]
-depends-on = ["rsr-template-repo", "standards"]
+depends-on = ["hyperpolymath/rsr-template-repo", "metadatastician/standards"]

@@ -1,0 +1,141 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= ADR-0002: Scaffoldia Composer and Retrofit Architecture (proposed)
+:toc:
+:sectnums:
+
+*Status:* Proposed — requires review against live standards and spine.
+*Date:* 2026-11-15
+*Scope:* Compose and retrofit from the first usable vertical slice; not
+a commitment to any implementation language or binary ABI today.
+
+== Context and hard boundaries
+
+Scaffoldia is the design surface for `standards -> rsr-template-repo ->
+scaffoldia -> (estate repos)` and was mandated on 2026-07-07 to support
+both new repository composition and retrofit, not mint first and retrofit
+indefinitely deferred. Its active repository presently contains an RSR
+shell, generic Idris2/Zig interface scaffold, and harvested registry data,
+but no composition engine. The historical
+`developer-ecosystem/scaffoldia` code contains Haskell CLI parsing,
+a Nickel merge library and MiniKanren constraints; the Haskell `init`
+and `build` operations do not invoke a real renderer. It must not be
+treated as production implementation.
+
+Upstream contracts changed on 2026-10-06 (rsr-template-repo ADR-0002/0003).
+`*_chora.deed` with `(variant)`, `(provenance)`, `(rsr-profile)`
+and `(mint-answers)`, plus `archetypes/<name>/<name>_praxis.deed`,
+overlays, `prune.txt` and `actions.lock` fragments, replace the
+legacy standalone `VARIANT.a2ml`/`ARCHETYPE.a2ml` contracts.
+`metadatastician/standards` defines capability gates; the spine defines
+template mechanics. No Scaffoldia-specific alternative public grammar.
+
+Normative lifecycle: `metadatastician/standards/0-canon/rsr/SCAFFOLD-LIFECYCLE.adoc`
+(Mint, Provision, Configure, Harness; then corrective, adaptive,
+perfective, preventive sustain). Reuse Hypatia for conformance measurement,
+not a forked score; use reposystem/gitbot-fleet for owner-approved campaigns.
+
+== Proposed data flow (not yet implemented)
+
+. Resolve immutable source snapshot(s): canon version, spine commit and
+  archetype praxis deed; reject missing/ambiguous pins.
+. Validate requested capabilities against the canonical gate table;
+  read existing profile/variant/answers from the target repo's native deed.
+. Create `CompositionPlan` from spine, one archetype, declared features,
+  identity and profile: sorted path actions, provenance, conflicts and
+  required toolchains. Never accept silent last-writer-wins.
+. For mint, compare desired state against an empty/staged target.
+. For retrofit, perform a three-way comparison: pinned base, working
+  target and desired pinned successor. Preserve user changes, classify
+  intentional divergence, fail closed on conflicts.
+. Dry-run by default. Apply only to approved local target staging; no
+  forge identity, visibility, branch-protection or fan-out changes
+  without an explicit owner approval step.
+. Emit provenance and mint answers using the spine's existing deed writer,
+  then validate with its drift check, real build/test and Hypatia oracle.
+. Emit an `ExecutionReceipt` of file operations, skipped checks, failure
+  evidence and recovery information. A plan/receipt is internal engine
+  output, NOT a new normative RSR document format.
+
+Proposed internal types:
+`SourceSnapshot`, `RepositorySpecification`, `CompositionPlan`,
+`ReconciliationPlan`, `ExecutionReceipt`. Each type needs an explicit
+schema and compatibility version *internal* to Scaffoldia before use.
+
+== Engine selection — open decision
+
+[cols="2,2,3",options="header"]
+|===
+| Candidate | Existing evidence | Decision risk / spike required
+
+| Adapt dormant Haskell CLI + Nickel builder | Parser and merge helpers
+exist, Haskell is expressly permitted for Scaffoldia by the current
+language policy | CLI build/init are not connected; merging overwrites
+conflicting paths; legacy language/license defaults and untested registry
+must be corrected; prove working deed ingestion and replay
+| Rust core with verified contracts | Fits deterministic filesystem
+planning, constrained write operations and Creusot/Pearlite + Verus
+direction | New implementation cost; proof plan and parser reuse required;
+prove minimal deed input -> deterministic dry-run with no duplicate grammar
+| Idris2/Zig as engine boundary | Generic code and Zig tests inherited
+from RSR template | FFI symbols/result codes already mismatch; native ABI
+need is unproven. Avoid committing to this seam until linked cross-language
+consumer test demonstrates necessity and safety
+|===
+
+Selection gate: implement equal-scope minimal spikes, measure correctness,
+maintenance cost, language-policy compliance, typed-contract faithfulness
+and testability. Document why the selected option wins before merging
+composer code. Archived ReScript and stale registry defaults cannot
+silently become eligible templates. Do not auto-edit license/SPDX data.
+
+== Interfaces and ownership
+
+[cols="1,3,2",options="header"]
+|===
+| Interface | Required behaviour | Owner/authority
+
+| CanonReader | Versioned criteria and capability vocabulary | standards
+| SpineReader | Pin, praxis deed, overlays, prune and action locks | rsr-template-repo
+| PlanEngine | Deterministic file plan and conflicts | scaffoldia
+| Mint / Retrofit | One planner, two base-state adapters | scaffoldia
+| ForgeConfig | Explicit out-of-band, operator-approved settings | forge/operator
+| Conformance | Scorable profile, actual tests and report | hypatia + build tools
+| Drift | Replayable mint and pinned-parent comparison | spine check scripts
+| Sustain | Reviewable audit-first remediation, never silent fan-out | fleet/reposystem
+| Trust | k9/deed validation and scope of permissions | standards/k9 tooling
+|===
+
+== Safety invariants
+
+* No filesystem traversal, path alias/case collision, symlink escape,
+  outside-root writes, or overwriting target files without a plan.
+* Source snapshots and provenance are pinned, never inferred from latest
+  on replay; unknown source/schema/capability is a hard diagnostic.
+* Same pinned inputs yield byte-equivalent planned artifacts; applying a
+  completed plan twice is idempotent.
+* A child preserves a unique identity; template self-name and parent
+  references must not be conflated.
+* Workflow lock fragments merge by action identity and reject conflicting
+  hashes; no gate should be green after a skipped required tool.
+* Auth/forge mutations are not implicit side effects; license and
+  attribution changes are flag-only, requiring owner review.
+* Proof obligations and limitations are explicit: Zig-side tests alone
+  do not validate an Idris2 -> C -> Zig ABI.
+
+== Acceptance evidence for first vertical slice
+
+A disposable Julia library minted from the pinned spine's
+`julia-library` praxis deed must build/test, carry correct native deed
+clauses and replay without drift. A second Rust CLI fixture must check
+archetype diversity. A deliberately modified existing repo must yield
+a non-destructive retrofit plan and an explicit conflict. Negative tests
+must include bad pin, unknown capability, path traversal, conflicting
+lock entry, missing toolchain and non-idempotent application attempt.
+No M0 assertion until those tests pass on the PR head.
+
+== Decision follow-up
+
+This ADR is *proposed*. Next scoped PR: implement read-only source/contract
+resolution and compare Haskell/Nickel reuse against a minimal Rust planning
+spike, without modifying live repositories. No release, merge or promotion
+is implied by accepting this document.
