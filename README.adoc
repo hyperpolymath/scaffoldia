@@ -15,25 +15,30 @@ repositories, and retrofits existing ones.
 
 [NOTE]
 ====
-*Status: design phase.* This repository currently carries the RSR substrate
-(governance, CI, machine-readable metadata) and the design surface for the
-composer; the composition engine itself is not built yet. See
-`.machine_readable/descriptiles/STATE.a2ml` for the honest state.
+*Status: design phase; composition and retrofit are not implemented.* The
+inherited RSR governance, CI and Idris2/Zig interface scaffold are not a
+working repository designer. The present architecture and blockers are tracked
+in `docs/architecture/TOPOLOGY.adoc`, `docs/status/ROADMAP.adoc`, and
+`.machine_readable/descriptiles/STATE.a2ml`. The composer design is a
+*proposal*, not an accepted engine decision (ADR-0002).
 ====
 
 == What this is
 
 Scaffoldia is the top layer of the estate's scaffolding stack:
 
-  standards → rsr-template-repo → scaffoldia → (designed/retrofitted repos)
+  metadatastician/standards → rsr-template-repo → scaffoldia → (designed/retrofitted repos)
 
 `standards` defines the RSR canon; `rsr-template-repo` operationalises it as a
 GitHub template with a basic `just init` scaffolder; *scaffoldia* is the
 full-featured designer that treats variation as data. It consumes each variant
-template's *variant contract* (`VARIANT.a2ml` — parent pin + declared path
-divergences; see ADR-0002 in rsr-template-repo and the reference
-implementation in `rsr-julia-library-template-repo`) so that GitHub's
-"Use this template" path and the composed path can never silently diverge.
+template's current *deed contracts*: archetype `*_praxis.deed` files,
+overlays and the `(variant)`, `(provenance)`, `(rsr-profile)` and
+`(mint-answers)` clauses of a repository `*_chora.deed`. Earlier standalone
+`VARIANT.a2ml`/`ARCHETYPE.a2ml` descriptions were superseded in part by
+rsr-template-repo ADR-0002/0003 on 2026-10-06. Both the template mint and
+Scaffoldia must use the same upstream contract semantics, with replayable
+mint answers and drift checks; no parallel schema.
 
 Mandated scope (owner, 2026-07-07): *composer + retrofit from day one* — the
 same pack-diff machinery that composes new repos re-synchronises existing
@@ -55,8 +60,10 @@ just validate            # structure + metadata checks (RSR shape)
   in a2ml, so tools and agents can read the project's state and boundaries.
 * *AI gatekeeper protocol* — `0-AI-MANIFEST.a2ml` is the universal entry point that
   tells an AI agent how to work in this repo before it touches anything.
-* *Typed ABI/FFI seam* — `src/interface/Abi/` (Idris2 type + layout proofs) over
-  `src/interface/ffi/` (Zig implementation), with generated C headers.
+* *Inherited ABI/FFI scaffold* — `src/interface/Abi/` (Idris2) and
+  `src/interface/ffi/` (Zig). Their symbol names, return codes and pointer
+  semantics currently disagree; compilation of each side does *not* establish
+  cross-language conformance. Do not use the seam for composition yet.
 * *CI/CD* — GitHub Actions for quality, security (CodeQL, Scorecard, secret
   scanning), multi-forge mirroring, and RSR anti-pattern enforcement.
 * *Supply-chain & reproducibility* — container layering (stapeln), Nix/Guix shells,

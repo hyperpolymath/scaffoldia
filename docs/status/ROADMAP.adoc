@@ -1,23 +1,60 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= YOUR Template Repo Roadmap
+= Scaffoldia Delivery Roadmap
+:toc:
+:sectnums:
 
-== Current Status
+== Current status (2026-11-15)
 
-Initial development phase.
+Design phase, CRG X (unproven composer). The RSR repository substrate is
+substantial; composer, mint planner, retrofit planner and template-sync loop
+are not implemented. No release or completion claim follows from inherited
+Zig tests or passing isolated workflows.
 
-== Milestones
+== P0 — Corrective architecture/contract reconciliation
 
-=== v0.1.0 - Foundation
-* [ ] Core functionality
-* [ ] Basic documentation
-* [ ] CI/CD pipeline
+* [ ] Review proposed ADR-0002 and ratify implementation strategy using a
+  running comparison of historical Haskell/Nickel and a minimal Rust spike.
+* [ ] Replace obsolete standalone `VARIANT.a2ml`/`ARCHETYPE.a2ml`
+  assumptions with the canonical deed clauses and praxis deeds; do not
+  invent new public contract formats.
+* [ ] Inventory and reconcile stale validation gates, CI workflow headers,
+  Actions locks, reusable workflow references and well-known paths.
+* [ ] Decide whether Idris2/Zig ABI is necessary for the composer; if retained,
+  test actual cross-language linking and repair signature/result/platform mismatches.
+* [ ] Do not claim CI green until all required latest-commit checks execute
+  successfully and review threads are resolved.
 
-=== v1.0.0 - Stable Release
-* [ ] Full feature set
-* [ ] Comprehensive tests
-* [ ] Production ready
+== M0 — Complete scaffold with live interfaces
 
-== Future Directions
+* [ ] Parse pinned canon/spine and archetype praxis deeds, overlay/prune and
+  `actions.lock` fragments; reject invalid/unknown inputs.
+* [ ] Build a deterministic file-level `CompositionPlan` with collision,
+  path-traversal, license-policy and capability checks.
+* [ ] Implement dry-run mint with actual Julia-library archetype (first
+  vertical slice) and an independently demonstrated Rust-CLI archetype.
+* [ ] Implement dry-run three-way retrofit against pinned parent; preserve
+  unrelated changes and stop on conflicts.
+* [ ] Emit native deed clauses (profile, variant, provenance, mint-answers)
+  and verify replayable mint drift via the existing spine mechanisms.
+* [ ] Make the forge/configure step explicitly operator-approved; no hidden
+  repo rename, visibility or protection mutation.
+* [ ] Attach build/test, Hypatia scoring, drift and signed/typed evidence
+  receipts; skips remain reported as skips.
+* [ ] Prove idempotence, deterministic replay, negative-case enforcement and
+  same-input repeatability in CI.
 
-_To be determined based on community feedback._
+== M1 — Sustain loop (after M0)
+
+* [ ] Regenerate template variants as declared artifacts, compare with
+  hand-maintained reference, and record upstream promotion candidates.
+* [ ] Send audit-first proposals to reposystem and gitbot-fleet; fan-out
+  changes require owner approval and scoped PRs.
+* [ ] Integrate tests/assurance without replacing proven-tests-and-benches,
+  Hypatia or the standard's normative checker.
+
+== Non-goals
+
+Do not redefine the canon, install a second RSR profile grammar, report
+template boilerplate as implemented engine capability, auto-edit licenses
+or SPDX attribution, bypass branch protections, or merge without current
+review and real CI evidence.
