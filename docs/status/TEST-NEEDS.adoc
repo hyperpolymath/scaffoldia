@@ -1,64 +1,46 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = TEST-NEEDS: scaffoldia
+:toc:
 
-== Current State (Updated 2026-07-27 — instantiation cure)
+== Live source and honest coverage (2026-11-15)
 
-This file previously described the template's own dogfooding of its
-now-deleted validation machinery (`scripts/validate-template.sh`,
-`tests/e2e/template_instantiation_test.sh`). Those scripts existed only to
-validate an *un-instantiated* RSR template and made no sense once scaffoldia
-was instantiated with its own real identity — they have been removed. This
-section instead describes the test infrastructure scaffoldia actually has.
+The full **18-category x 14-aspect** crosswalk, test evidence and
+unimplemented obligations are maintained in
+link:ASSURANCE-MATRIX.adoc[ASSURANCE-MATRIX.adoc].
 
-[cols="2,1,4", options="header"]
-|===
-| Category | Count | Details
+The repository remains in design phase. Its composer, mint planner,
+retrofit planner and tested Idris2-to-Zig ABI are **not implemented**.
+A successful build of each language separately is not linked ABI evidence.
+The old record's phrase "1 E2E test" referred to a compiler/FFI smoke
+harness; it never exercised a minted repository.
 
-| *Source modules* | 6 | 3 Idris2 ABI (Foreign, Layout, Types), 2 Zig FFI (build.zig, main.zig), 1 Zig integration test module
-| *Unit tests* | 3 | Inline `test` blocks in `src/interface/ffi/src/main.zig` (lifecycle, error handling, version)
-| *Integration tests* | 10 | `src/interface/ffi/test/integration_test.zig` — real tests against the exported FFI (lifecycle, operations, strings, version, build_info, error handling)
-| *E2E tests* | 1 | `tests/e2e.sh` — real preflight + `idris2 --build src/interface/abi.ipkg` + `zig build`/`zig build test`
-| *Aspect tests* | 1 | `tests/aspect_tests.sh` — SPDX header coverage + dangerous-pattern grep (real, pre-existing, unchanged by the cure)
-| *Workflow tests* | 1 | `tests/workflows/validate_workflows_test.sh` (unchanged by the cure)
-| *Benchmarks* | 3 | `benches/template_bench.sh` — Zig build, Zig tests, workflow validation
-|===
+The published Proven-Tests downstream receipt schema-v2 remains
+17 x 14 and cannot credit the standards' new category 18. Consult
+`hyperpolymath/proven-tests-and-benches/docs/TAXONOMY-VERSION-BOUNDARY.adoc`
+before changing a report denominator.
 
-== Zig Build & Test (Verified)
+== Verified local execution
 
-* `zig fmt --check .` — exit 0
-* `cd src/interface/ffi && zig build` — exit 0
-* `cd src/interface/ffi && zig build test --summary all` — exit 0, **13/13 tests pass** (3 unit + 10 integration)
-* `idris2 --build src/interface/abi.ipkg` — exit 0 (2 pre-existing shadowing warnings in `Abi.Layout`, unrelated to this cure, out of scope)
+* `bash tests/e2e.sh`: three separate build/test stages passed on a
+  local Linux runner with Idris2 0.8.0 and Zig 0.16.0.
+* Repaired `bash tests/aspect_tests.sh`: 15 tracked files passed source-scope
+  and comment-filtered lexical checks.
+* `bash tests/workflows/aspect_scope_test.sh`: silence, two firing,
+  NOT_RUN controls passed.
+* Proven Lock Gate at published pinned source: exit 0, `consistent`;
+  remote owner drift and moved repository references were unjudged.
 
-== What Changed From the Template State
+These are not claims about PR CI. Every proposed workflow check must run
+and pass on the latest head before promotion. Composer functionality,
+proofs, property tests, fuzzing, mutation, rollback and benchmarks remain
+gaps, not implicit N/A.
 
-* [.line-through]#`scripts/validate-template.sh` (8-phase template validation)# → REMOVED (validated an un-instantiated template; scaffoldia is instantiated)
-* [.line-through]#`tests/e2e/template_instantiation_test.sh`# → REMOVED (same reason)
-* `src/interface/ffi/build.zig` was a no-op stub (Zig 0.15-era comment claiming
-  tests "are run directly with zig build-exe -ftest-runner") → now a real
-  `build.zig`: static library target + `zig build test` wired to both the
-  main module and the integration-test module.
-* `src/interface/ffi/src/main.zig` had three real Zig 0.16 compile bugs
-  beyond placeholder substitution (`opaque` type with fields; `callconv(.C)`
-  invalid casing; `std.heap.c_allocator` used without linking libc) — fixed.
-* `src/interface/ffi/test/integration_test.zig` was a fully-commented-out
-  placeholder (`test "placeholder test - implementation required"`) → now 10
-  real tests exercising every exported `scaffoldia_*` function.
-* `tests/e2e.sh` was a fully-commented-out template with only a preflight
-  header → now runs the real Idris2 build + Zig build/test and reports
-  PASS/FAIL with the script's existing `check`/`green`/`red` helpers.
-* `benches/template_bench.sh` — the "Template Validation" and "Template
-  Instantiation" benchmark sections (which called the two now-deleted
-  scripts) were removed; the Zig build/test and workflow-validation
-  benchmarks were kept and renumbered.
+== Test provenance
 
-== Author Attribution
-
-Jonathan D.A. Jewell <6759885+hyperpolymath@users.noreply.github.com>
-
-== Next Steps (Future Sessions)
-
-* [ ] Integrate `just test-all` into CI/CD workflows
-* [ ] Generate test coverage reports
-* [ ] Add benchmarks for the composition engine once it exists (currently design phase — see `.machine_readable/descriptiles/STATE.a2ml`)
+The source-of-truth test rules belong to
+`metadatastician/standards/3-practice/testing-and-benchmarking/TESTING-TAXONOMY.adoc`.
+Before making local tests, use `hyperpolymath/proven-tests-and-benches`;
+the generic workflows source is
+`hyperpolymath/proven-cicd-and-workflows`.
+Silence/firing and NOT_RUN controls follow the Proven-Tests
+`docs/TEST-DOCTRINE.adoc`.
