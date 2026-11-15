@@ -28,5 +28,7 @@ jobs:
         uses: actions/checkout@v7.0.1
       - name: Root shape allowlist
         run: bash scripts/check-root-shape.sh .
-      - name: AsciiDoc by default (no .md under docs/)
+      - name: Prove wiki-format policy controls (positive and negative)
+        run: bash tests/workflows/wiki_format_test.sh
+      - name: AsciiDoc for documents, Markdown for wiki sources
         run: bash scripts/check-no-md-in-docs.sh .

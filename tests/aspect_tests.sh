@@ -12,6 +12,11 @@ if ! git -C "$root" rev-parse --show-toplevel >/dev/null 2>&1; then
   echo 'NOT_RUN: not a Git checkout' >&2
   exit 2
 fi
+scanner="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scan-proof-escapes.pl"
+if [ ! -r "$scanner" ]; then
+  echo 'NOT_RUN: required proof-source scanner absent' >&2
+  exit 2
+fi
 fail=0
 checked=0
 proofs=0
@@ -27,17 +32,14 @@ while IFS= read -r -d '' path; do
   case "$path" in
     *.idr|*.v|*.lean|*.agda|*.thy)
       proofs=$((proofs+1))
-      # Lexical guard only. The language-specific proof checker owns soundness.
-      if ! perl -0777 -e '
-        local $/;
-        my $source = <>;
-        $source =~ s/\(\*.*?\*\)//gs;
-        $source =~ s/(?:--|\/\/)[^\n]*//g;
-        exit ($source =~ /\b(?:believe_me|really_believe_me|assert_total|Admitted|sorry|unsafeCoerce)\b/ ? 1 : 0);
-      ' "$file"; then
-        echo "FAIL: proof escape in executable source: $path" >&2
-        fail=1
-      fi
+      # Source-aware lexical guard, not a compiler or proof checker.
+      rc=0
+      perl "$scanner" "$file" || rc=$?
+      case "$rc" in
+        0) ;;
+        1) fail=1 ;;
+        *) echo "NOT_RUN: proof scanner could not assess $path (exit $rc)" >&2; fail=1 ;;
+      esac
       ;;
   esac
 done < <(cd "$root" && git ls-files -z -- src verification/proofs)
