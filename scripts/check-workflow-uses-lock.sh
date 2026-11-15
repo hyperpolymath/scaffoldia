@@ -20,7 +20,7 @@ for file in "$root"/.github/workflows/*.yml "$root"/.github/workflows/*.yaml; do
   rel=".github/workflows/$(basename "$file")"
   while IFS= read -r line; do
     # Comments (including workflow examples) do not match the anchored selector.
-    spec="$(printf '%s\n' "$line" | sed -nE 's/^[[:space:]]*uses:[[:space:]]*([^[:space:]#]+).*$/\1/p')"
+    spec="$(printf '%s\n' "$line" | sed -nE 's/^[[:space:]]*(-[[:space:]]*)?uses:[[:space:]]*([^[:space:]#]+).*$/\2/p')"
     [ -n "$spec" ] || continue
     checked=$((checked + 1))
     case "$spec" in
