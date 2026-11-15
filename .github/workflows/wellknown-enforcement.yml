@@ -8,10 +8,15 @@ on:
     branches: [main, master]
     paths:
       - '.well-known/**'
+      - 'www/.well-known/**'
       - 'security.txt'
+      - '.github/workflows/wellknown-enforcement.yml'
   pull_request:
     paths:
       - '.well-known/**'
+      - 'www/.well-known/**'
+      - 'security.txt'
+      - '.github/workflows/wellknown-enforcement.yml'
   schedule:
     # Weekly expiry check
     - cron: '0 9 * * *'
@@ -29,8 +34,12 @@ jobs:
       - name: RFC 9116 security.txt validation
         run: |
           SECTXT=""
-          [ -f ".well-known/security.txt" ] && SECTXT=".well-known/security.txt"
-          [ -f "security.txt" ] && SECTXT="security.txt"
+          for candidate in www/.well-known/security.txt .well-known/security.txt security.txt; do
+            if [ -f "$candidate" ]; then
+              SECTXT="$candidate"
+              break
+            fi
+          done
 
           if [ -z "$SECTXT" ]; then
             echo "::error::No security.txt found — required for OpenSSF Best Practices. See https://github.com/hyperpolymath/well-known-ecosystem"
@@ -48,6 +57,10 @@ jobs:
 
           # Check expiry
           EXPIRES=$(grep "^Expires:" "$SECTXT" | cut -d: -f2- | tr -d ' ' | head -1)
+          if ! date -d "$EXPIRES" > /dev/null 2>&1; then
+            echo "::error::security.txt Expires field is not a valid date"
+            exit 1
+          fi
           if date -d "$EXPIRES" > /dev/null 2>&1; then
             DAYS=$(( ($(date -d "$EXPIRES" +%s) - $(date +%s)) / 86400 ))
             if [ $DAYS -lt 0 ]; then
@@ -62,9 +75,11 @@ jobs:
       - name: RSR well-known compliance
         run: |
           MISSING=""
-          [ ! -f ".well-known/security.txt" ] && [ ! -f "security.txt" ] && MISSING="$MISSING security.txt"
-          [ ! -f ".well-known/ai.txt" ] && MISSING="$MISSING ai.txt"
-          [ ! -f ".well-known/humans.txt" ] && MISSING="$MISSING humans.txt"
+          for name in security.txt ai.txt humans.txt; do
+            if [ ! -f "www/.well-known/$name" ] && [ ! -f ".well-known/$name" ] && [ ! -f "$name" ]; then
+              MISSING="$MISSING $name"
+            fi
+          done
 
           if [ -n "$MISSING" ]; then
             echo "::warning::Missing RSR recommended files:$MISSING"
