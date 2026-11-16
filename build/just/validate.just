@@ -55,16 +55,7 @@ validate-rsr:
 validate-state:
     #!/usr/bin/env bash
     set -euo pipefail
-    state=".machine_readable/descriptiles/STATE.a2ml"
-    if [ ! -f "$state" ]; then
-        echo "STATE.a2ml: INVALID (file missing)" >&2
-        exit 1
-    fi
-    if ! grep -Eq '^\[metadata\][[:space:]]*$' "$state" || ! grep -Eq '^[[:space:]]*project[[:space:]]*=' "$state"; then
-        echo "STATE.a2ml: INVALID (missing required sections)" >&2
-        exit 1
-    fi
-    echo "STATE.a2ml: valid"
+    bash scripts/validate-state.sh
 
 # Validate AI installation guide completeness (finishbot pre-release check)
 validate-ai-install:
