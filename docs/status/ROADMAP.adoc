@@ -32,8 +32,18 @@ Zig tests or passing isolated workflows.
   path-traversal, license-policy and capability checks.
 * [ ] Implement dry-run mint with actual Julia-library archetype (first
   vertical slice) and an independently demonstrated Rust-CLI archetype.
+* [ ] Implement an operator-approved *local staging apply* for mint. Materialise
+  a reviewed plan in an isolated target directory with declared input hashes,
+  path bounds and no forge or network mutation. Execute the minted repository's
+  real build/tests there; capture what was actually run. Repeat the same plan
+  against the same base and demonstrate deterministic, idempotent output.
 * [ ] Implement dry-run three-way retrofit against pinned parent; preserve
   unrelated changes and stop on conflicts.
+* [ ] Implement an operator-approved *local staging apply* for retrofit.
+  Materialise the approved three-way plan in a disposable local copy, preserving
+  unrelated files and refusing changed-base hashes, unapproved replacements and
+  conflicts. Test both a successful authorised overlay replacement and an
+  intentionally conflicting undeclared replacement; verify idempotent replay.
 * [ ] Emit native deed clauses (profile, variant, provenance, mint-answers)
   and verify replayable mint drift via the existing spine mechanisms.
 * [ ] Make the forge/configure step explicitly operator-approved; no hidden
