@@ -5,18 +5,18 @@
 #
 [metadata]
 version = "0.1.0"
-last-updated = "2026-07-27"
+last-updated = "2026-11-16"
 
 [project]
-name = "[YOUR-REPO-NAME]"
-purpose = "Full-featured repository designer for the RSR estate: composes spine × variant pack × features × profile into new repos and retrofits existing ones. Design phase — consumes VARIANT.a2ml contracts; top of the scaffolding stack (standards → rsr-template-repo → scaffoldia)."
+name = "scaffoldia"
+purpose = "Design-stage RSR repository composer: deterministic mint and retrofit from pinned metadatastician/standards canon and rsr-template-repo spine, consuming deed-era *_chora.deed clauses and archetype *_praxis.deed contracts. No operational composer, apply, or linked ABI is yet implemented."
 
 [ai-allocation]
 agents = [
   { name = "CLAUDE", role = "proofs, compilers, repo-local implementation, CI/CD, formal verification, Rust/Idris2/Zig" },
   { name = "CHATGPT", role = "prose, papers, publication review, standards docs, outreach drafts, letters" },
   { name = "GEMINI", role = "estate audits, cross-repo sweeps, long-context triage, pattern detection" },
-  { name = "VIBE", role = "UI/frontend, PanLL panels, ReScript components, theming, rapid prototyping" },
+  { name = "VIBE", role = "UI/frontend, accessibility, PanLL panels, theming and prototypes using the project-approved implementation stack" },
 ]
 
 [policy]
@@ -30,5 +30,5 @@ items = [
   { agent = "CLAUDE", task = "proofs, compilers, repo-local implementation, CI/CD, formal verification, Rust/Idris2/Zig" },
   { agent = "CHATGPT", task = "prose, papers, publication review, standards docs, outreach drafts, letters" },
   { agent = "GEMINI", task = "estate audits, cross-repo sweeps, long-context triage, pattern detection" },
-  { agent = "VIBE", task = "UI/frontend, PanLL panels, ReScript components, theming, rapid prototyping" },
+  { agent = "VIBE", task = "UI/frontend, accessibility, PanLL panels, theming and prototypes using the project-approved implementation stack" },
 ]
