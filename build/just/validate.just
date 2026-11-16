@@ -53,13 +53,18 @@ validate-rsr:
 
 # Validate STATE.a2ml syntax
 validate-state:
-    @if [ -f ".machine_readable/descriptiles/STATE.a2ml" ]; then \
-        grep -q '^\[metadata\]' .machine_readable/descriptiles/STATE.a2ml && \
-        grep -q 'project\s*=' .machine_readable/descriptiles/STATE.a2ml && \
-        echo "STATE.a2ml: valid" || echo "STATE.a2ml: INVALID (missing required sections)"; \
-    else \
-        echo "No .machine_readable/descriptiles/STATE.a2ml found"; \
+    #!/usr/bin/env bash
+    set -euo pipefail
+    state=".machine_readable/descriptiles/STATE.a2ml"
+    if [ ! -f "$state" ]; then
+        echo "STATE.a2ml: INVALID (file missing)" >&2
+        exit 1
     fi
+    if ! grep -Eq '^\[metadata\][[:space:]]*$' "$state" || ! grep -Eq '^[[:space:]]*project[[:space:]]*=' "$state"; then
+        echo "STATE.a2ml: INVALID (missing required sections)" >&2
+        exit 1
+    fi
+    echo "STATE.a2ml: valid"
 
 # Validate AI installation guide completeness (finishbot pre-release check)
 validate-ai-install:
