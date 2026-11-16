@@ -46,6 +46,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+      - name: Install Idris2 build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends chezscheme build-essential libgmp-dev
+      - name: Bootstrap Idris2 0.8.0
+        env:
+          IDRIS2_VERSION: v0.8.0
+          IDRIS2_SOURCE_REV: 15a3e4e70843f7a34100f6470c04b791330788df
+        run: |
+          set -euo pipefail
+          source_dir="$RUNNER_TEMP/Idris2"
+          git clone --depth 1 --branch "$IDRIS2_VERSION" https://github.com/idris-lang/Idris2.git "$source_dir"
+          test "$(git -C "$source_dir" rev-parse HEAD)" = "$IDRIS2_SOURCE_REV"
+          make -C "$source_dir" bootstrap SCHEME=chez
+          make -C "$source_dir" install
+          echo "$HOME/.idris2/bin" >> "$GITHUB_PATH"
+          "$HOME/.idris2/bin/idris2" --version
+      - name: Set up Zig 0.15.1
+        uses: goto-bus-stop/setup-zig@abea47f85e598557f500fa1fd2ab7464fcb39406
+        with:
+          version: 0.15.1
+      - name: Verify required toolchains
+        run: |
+          idris2 --version
+          zig version
       - name: Run E2E harness
         run: |
           if [ -f tests/e2e.sh ]; then
