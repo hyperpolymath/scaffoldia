@@ -30,6 +30,7 @@ on:
       - 'src/**'
       - 'ffi/**'
       - 'tests/**'
+      - '.github/workflows/e2e.yml'
   workflow_dispatch:
 permissions: read-all
 concurrency:
