@@ -25,6 +25,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: STATE validator silence/firing controls
+        run: bash tests/validate_state_test.sh
       - name: Check file permissions
         run: |
           find . -type f -perm /111 -name "*.sh" | head -10 || true
