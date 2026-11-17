@@ -666,6 +666,12 @@ help-me:
 import? "build/just/proofs.just"
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# PLAN KERNEL & CONFORMANCE SUITE — see build/just/conformance.just
+# ═══════════════════════════════════════════════════════════════════════════════
+
+import? "build/just/conformance.just"
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # SESSION MANAGEMENT (THIN BINDINGS TO CENTRAL STANDARDS)
 # ═══════════════════════════════════════════════════════════════════════════════
 
