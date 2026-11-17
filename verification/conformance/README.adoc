@@ -140,6 +140,23 @@ cases/<kernel|planner>/<L0|L1|L2|L3>/<id>/
 starting tree, `expected/` the exact resulting tree. For `refused` cases the
 runner also asserts the target is unchanged.
 
+Optional case fields (read by `run.sh`; additive, pending ratification with
+the questions recorded alongside ADR-0003):
+
+`expect.results`:: For an accepted `apply` or `instantiate` case, the receipt
+result per path, e.g. `{"README.adoc":"unchanged"}`. Distinguishes "already
+realised" from "rewritten with the same bytes", which the tree alone cannot.
+`expect.tree_excludes`:: Strings that must occur in no file of the resulting
+tree (child identity: the publisher's own name).
+`target`:: `"directory"` (default), `"absent"` or `"file"`: what the runner
+puts at the target path, for `TARGET_INVALID` cases.
+
+A missing `before/` or `expected/` is an empty tree (git cannot hold an empty
+directory). Accepted trees are compared on files, links and executable bits;
+refused trees also on directories. Each case runs in a sandbox whose inputs
+are copies and whose target has a sibling directory `outside/`; any write
+outside the target, through a link or otherwise, fails the case.
+
 == Levels
 
 [cols="1,4",options="header"]
