@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# Pure decision core of the plan kernel. It must keep ZERO dependencies:
+# everything it cannot do with `std` (SHA-256, Unicode NFC) is injected
+# through the `Prims` trait by the edge crate.
+[package]
+name = "plan-kernel"
+description = "Pure decision core of a file-plan kernel: check, instantiate and decide apply for plan format v0.1"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+
+[dependencies]

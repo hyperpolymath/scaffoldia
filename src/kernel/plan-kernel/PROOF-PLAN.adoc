@@ -1,0 +1,144 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= plan-kernel: Proof Plan
+:toc:
+
+What is to be verified in this crate, by which verifier, and what has been
+run. Normative policy: `metadatastician/standards` `3-practice/PROOF-POLICY.adoc`
+(§1.2: Rust code is verified with *Creusot*, contracts written in *Pearlite*,
+and with *Verus*, by default; §1.1: third-party code is not re-proved but
+stated as an `ASSUMED` boundary).
+
+*Status: nothing in this file has been verified.* Every row below is
+`not run`. Unit and property tests exist (`cargo test`); they are tests, not
+proofs, and are reported as such.
+
+== Why this crate is the verification target
+
+The crate is the pure decision layer of the kernel. It performs no I/O and
+depends on nothing beyond `std`. Everything that needs tables or cryptography
+is injected through the `Prims` trait (NFC check, SHA-256), and the
+filesystem is reached only through observations (`apply::OpObs`) that the
+edge builds and effects (`apply::Step`) that the edge performs. That keeps
+the obligations below about total functions over plain data, which is what
+both Creusot and Verus handle best.
+
+Pearlite is Creusot's specification language, not a third verifier. Running
+both verifiers does not produce two independent witnesses: they share solver
+trust (policy §1.2).
+
+== Obligations
+
+[cols="1,2,3,1,1",options="header"]
+|===
+| Id | Function | Property (informal statement of the contract) | Creusot (Pearlite) | Verus
+
+| P1 path containment
+| `path::path_fault`
+| `path_fault(p) == None` implies: `p` is non-empty; does not start with `/`;
+contains no `\` and no control character; every `/`-separated segment is
+non-empty and is neither `.` nor `..` nor `.git` in any ASCII case. Hence,
+for any directory `t`, the lexical resolution of `t/p` is a proper
+descendant of `t` (stated over a modelled path resolution).
+| not run | not run
+
+| P2 uniqueness and prefix-freeness
+| `check::check_paths`
+| `Ok(())` implies: op paths strictly increase bytewise (so at most one op
+per path); `fold` is injective on the op paths; no folded op path is a proper
+`/`-prefix of another.
+| not run | not run
+
+| P3 pinned provenance
+| `plan::parse_plan`
+| `Ok(plan)` implies: every input `rev` is 40 lowercase hex digits; every
+op's `source.input` (and `replaces.input`) names a declared input; a delete's
+`expect` is a digest, never "absent"; hole names match `[A-Z][A-Z0-9_]*`
+and are distinct.
+| not run | not run
+
+| P4 all-or-nothing
+| `apply::decide`
+| The result is `Err(_)`, or `Ok(steps)` with `steps.len() == plan.ops.len()`
+and `steps[i].op == i`. Together with the edge's structure (the edge calls
+`perform` only on `Ok`), a refusal performs no effect. The edge part is
+`ASSUMED` (see below).
+| not run | not run
+
+| P5 precondition soundness
+| `apply::decide_op`
+| `Write` only when (leaf absent and expect absent) or (leaf a regular file
+whose digest equals expect); `Delete` only when the leaf is a regular file
+whose digest equals expect; never `Write`/`Delete` when the leaf or an
+ancestor is a symbolic link or an ancestor is not a directory.
+| not run | not run
+
+| P6 idempotence
+| `model::ModelFs::apply`
+| If `apply(fs) == Ok(_)` then `apply` on the result returns `Ok(steps')`
+with every effect `Unchanged` or `AlreadyAbsent`, and leaves the state
+unchanged (`apply ∘ apply = apply`). Depends on P2: prefix-freeness makes
+the operations independent (see the module comment of `apply`).
+| not run | not run
+
+| P7 no residue
+| `instantiate::instantiate`
+| `Ok(out)` implies `out.plan.holes` is empty and `find_residue(b) == None`
+for every output blob `b`; every hole has an answer and every answer names a
+hole.
+| not run | not run
+
+| P8 canonical form
+| `json::canonical`, `json::is_j1`
+| `canonical` sorts members by UTF-16 code units and escapes strings per
+RFC 8785 §3.2.2.2; `is_j1(bytes, v)` holds for exactly one byte string per
+value. (Injectivity of parsing is not claimed.)
+| not run | not run
+|===
+
+Planned scope per verifier: both verifiers take P1 to P7. P8 is a
+specification-conformance obligation (against RFC 8785) and is listed for
+completeness; if one verifier cannot express the UTF-16 ordering cheaply, it
+is recorded as unsupported for that verifier, not silently dropped.
+
+== `ASSUMED` boundaries
+
+[cols="1,3",options="header"]
+|===
+| Boundary | Assumption
+| `Prims::is_nfc` | Implemented at the edge by `unicode-normalization` 0.1.26: returns `true` exactly for strings in Unicode NFC.
+| `Prims::sha256_hex` | Implemented at the edge by `sha2` 0.10.9: SHA-256, lowercase hex; collision resistance is assumed.
+| `path::fold` | `lower(upper(lower(s)))` over `std`'s Unicode case mappings is assumed to merge at least what full case folding merges. Not checked against `CaseFolding.txt`.
+| JSON parsing | `serde_json` 1.0.154 parses I-JSON faithfully; duplicate member names are caught by the J-1 byte comparison, not by the parser.
+| Edge observation | `lstat`-based observation in the edge reports the target faithfully and never follows a link.
+| Edge effects | `ensure_dirs` and `write_atomic` re-check with `lstat` and write via `O_CREAT|O_EXCL` + `rename`; a concurrent writer between check and write is detected only on the paths the edge re-checks (a TOCTOU window remains, and an I/O failure mid-apply can leave a partial state that a re-run converges by P6).
+|===
+
+Kani (policy §4.1, `unsafe`/FFI seams): not applicable. The workspace has
+`#![forbid(unsafe_code)]` in both crates and no FFI.
+
+== What was attempted (2026-11-17)
+
+* Verus: `curl -sSL https://api.github.com/repos/verus-lang/verus/releases/latest`
+  returned `"GitHub access to this repository is not enabled for this session"`,
+  and `https://github.com/verus-lang/verus/releases/latest` answered
+  `HTTP/1.1 403 Forbidden` through the session proxy. Verus is distributed as
+  release binaries pinned to a Rust toolchain; none could be fetched.
+* Creusot: `cargo info cargo-creusot` gives `could not find cargo-creusot in
+  registry`. The Creusot driver is installed from its Git repository together
+  with a pinned nightly toolchain, Why3 and SMT solvers; none were reachable
+  in this session. `creusot-std` (the contract library) is on crates.io, but
+  contracts without the driver would be unchecked text, so none were added.
+
+Next step: in an environment with the Creusot driver and the Verus release
+installed, add the contracts above to `path`, `check`, `plan`, `apply`,
+`model` and `instantiate` (behind a feature flag or `cfg` so the plain build
+stays dependency-free), run both, and record each row's command, version and
+result here.
+
+== Testing evidence (not verification)
+
+`cargo test -p plan-kernel` runs unit tests for every module and three
+property-style tests with a fixed-seed generator: idempotence and
+all-or-nothing on `model::ModelFs` (P4, P6), safety stable under
+permutation-then-sort (P2), and a last-operation precondition refusal (P4).
+These are `TESTED`, not proved.
