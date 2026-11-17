@@ -9,7 +9,6 @@
 # bash, jq, coreutils. Run via `just conformance`.
 
 kernel_manifest := "src/kernel/Cargo.toml"
-kernel_bin := "src/kernel/target/release/scaffoldia-kernel"
 
 # Build the plan kernel (release, locked dependencies)
 kernel-build:
@@ -22,7 +21,5 @@ kernel-check:
     cargo fmt --manifest-path {{kernel_manifest}} --all -- --check
 
 # Fixtures match their generator; kernel passes L0; every negative control fails
-conformance: kernel-build
-    verification/conformance/gen-cases.sh --check
-    verification/conformance/run.sh --level L0 --kernel {{kernel_bin}}
-    verification/conformance/selftest.sh --level L0
+conformance:
+    verification/conformance/check-l0.sh

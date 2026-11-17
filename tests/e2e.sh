@@ -2,6 +2,13 @@
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
+# NOT RUN BY CI since 2026-11-17, and not a merge gate. This is the inherited
+# RSR template harness for the Idris2 ABI and Zig FFI seam. The owner retired
+# the "E2E" CI job until Scaffoldia can mint something end to end; the required
+# check is now `Conformance L0` (verification/conformance/README.adoc). Whether
+# the Idris2/Zig seam stays is an open decision (docs/status/ROADMAP.adoc, P0),
+# and the seam is documented as unproven (README.adoc). Needs idris2 and zig.
+#
 # RSR Standard E2E Test Template
 #
 # End-to-end tests validate the full pipeline: build → run → verify output.
@@ -11,8 +18,6 @@
 #   bash tests/e2e.sh
 #   just e2e
 #
-# Merge requirements (STANDING): All 6 test categories must pass before merge:
-#   P2P, E2E (this file), aspect, execution, lifecycle, benchmarks
 
 set -euo pipefail
 

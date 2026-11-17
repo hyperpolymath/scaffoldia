@@ -24,6 +24,21 @@ Zig tests or passing isolated workflows.
 * [ ] Do not claim CI green until all required latest-commit checks execute
   successfully and review threads are resolved.
 
+== Owner decision: the CI gate is conformance levels (2026-11-17)
+
+The `E2E — smoke` job is retired as a concept until Scaffoldia can mint
+something end to end. The required check is `Conformance L0`, and later `L1`,
+`L2`, `L3` as those levels exist, so the required context always names the
+highest level the engine passes. `.github/workflows/e2e.yml` (file name kept,
+it is an `actions.lock` key) runs `verification/conformance/check-l0.sh`.
+The inherited `tests/e2e.sh` (Idris2/Zig) is kept but not run by CI; whether
+the seam stays is the P0 item above.
+
+* [ ] *Owner step, required:* in the repository branch ruleset, replace the
+  required status check `E2E — smoke` with `Conformance L0`. Until that is done
+  a pull request waits forever on a context that no longer reports.
+* [ ] First real run of `Conformance L0` on GitHub (none yet).
+
 == M0 — Complete scaffold with live interfaces
 
 * [ ] Parse pinned canon/spine and archetype praxis deeds, overlay/prune and
@@ -45,8 +60,8 @@ Zig tests or passing isolated workflows.
 * [x] Plan kernel spike (ADR-0003, Rust, `src/kernel/`) passes all 47 `L0`
   kernel conformance cases and the suite fails each of its 3 negative controls
   (`just conformance`, local run 2026-11-17; see
-  `verification/conformance/README.adoc`, Evidence). Not in CI; no planner;
-  Creusot/Pearlite and Verus contracts not run.
+  `verification/conformance/README.adoc`, Evidence). Wired to CI as `Conformance L0`
+  (not yet run on GitHub); no planner; Creusot/Pearlite and Verus contracts not run.
 
 == M1 — Sustain loop (after M0)
 

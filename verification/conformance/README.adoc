@@ -176,6 +176,15 @@ the publisher's own repository.
 A level passes only if every case at and below it passes. Skipped cases are
 counted and printed as skipped; a run with skips does not pass its level.
 
+=== CI check
+
+The CI check named `Conformance L0` (`.github/workflows/e2e.yml`) runs, on every
+pull request, `verification/conformance/check-l0.sh`, the same command list as
+`just conformance`: the locked release build of the kernel, `gen-cases.sh --check`,
+`run.sh --level L0` and `selftest.sh --level L0`. As levels are added the name
+will change to the highest level passed (`Conformance L1`, and so on). No run of
+this check on GitHub is recorded yet.
+
 == Negative control
 
 `controls/` holds deliberately wrong kernels (for example one that writes any

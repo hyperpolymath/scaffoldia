@@ -173,6 +173,11 @@ Given through the question selector on that date.
 * *Toolchains by derivation.* A repository's toolchain and hooks are generated
   from the languages its deed declares (standards#698, #706, #917). This is a
   planner requirement at `L1`; nothing implements it yet.
+* *CI gate.* The "E2E" job is retired until Scaffoldia can mint something end
+  to end. The required check is `Conformance L0`, and later `L1`, `L2`, `L3` as
+  they exist, so the required context always names the highest level the
+  engine passes. This changes a required context name: the owner updates the
+  branch ruleset (`E2E — smoke` to `Conformance L0`).
 
 == Open questions the proofs and the spike raised
 
