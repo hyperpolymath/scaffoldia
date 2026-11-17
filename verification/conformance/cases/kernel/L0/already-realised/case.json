@@ -1,0 +1,1 @@
+{"expect":{"outcome":"ok","results":{"README.adoc":"unchanged","docs/index.adoc":"written"}},"id":"already-realised","kind":"apply","level":"L0","principle":"A write whose desired state already holds is a no-op even though expect says absent","source":"conformance README, Apply","title":"A path that already has the desired content is unchanged"}

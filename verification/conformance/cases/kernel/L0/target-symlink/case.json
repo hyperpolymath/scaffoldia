@@ -1,0 +1,1 @@
+{"expect":{"code":"TARGET_SYMLINK","outcome":"refused"},"id":"target-symlink","kind":"apply","level":"L0","principle":"No symlink escape: links are never followed when writing","source":"ADR-0002, Safety invariants and Acceptance evidence","title":"An ancestor directory is a link pointing outside"}

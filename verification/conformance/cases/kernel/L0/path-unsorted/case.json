@@ -1,0 +1,1 @@
+{"expect":{"code":"PATH_DUPLICATE","outcome":"refused"},"id":"path-unsorted","kind":"apply","level":"L0","principle":"Operations are sorted bytewise by path, so a plan has one canonical order","source":"conformance README, Plan format v0.1","title":"Operations not sorted by path"}

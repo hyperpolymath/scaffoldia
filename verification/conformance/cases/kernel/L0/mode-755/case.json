@@ -1,0 +1,1 @@
+{"expect":{"outcome":"ok","results":{"README.adoc":"written","bin/tool.sh":"written"}},"id":"mode-755","kind":"apply","level":"L0","principle":"The mode of each write is part of the desired state","source":"conformance README, Plan format v0.1","title":"Executable mode 755 is honoured"}

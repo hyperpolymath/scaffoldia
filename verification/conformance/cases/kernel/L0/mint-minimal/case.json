@@ -1,0 +1,1 @@
+{"expect":{"outcome":"ok","results":{"README.adoc":"written","docs/index.adoc":"written"}},"id":"mint-minimal","kind":"apply","level":"L0","principle":"A closed, safe plan applied to an empty target yields exactly the planned tree","source":"ADR-0003, Acceptance evidence","title":"Minimal valid mint into an empty target"}

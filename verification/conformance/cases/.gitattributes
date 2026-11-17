@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
+# Case fixtures are compared byte for byte (blob hashes, before/, expected/):
+# never let git rewrite line endings in them.
+* -text

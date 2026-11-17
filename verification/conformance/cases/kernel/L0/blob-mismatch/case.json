@@ -1,0 +1,1 @@
+{"expect":{"code":"BLOB_MISMATCH","outcome":"refused"},"id":"blob-mismatch","kind":"apply","level":"L0","principle":"Content is addressed by SHA-256 and checked before use","source":"conformance README, Plan format v0.1","title":"A blob whose content does not match its name"}

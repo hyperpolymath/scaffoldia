@@ -1,0 +1,2 @@
+forge: github.com/{{OWNER}}/{{REPO}}
+name: {{REPO}}

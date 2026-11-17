@@ -1,0 +1,1 @@
+{"expect":{"code":"OPEN_PLAN","outcome":"refused"},"id":"open-plan","kind":"apply","level":"L0","principle":"Only a closed plan can be applied","source":"conformance README, Plan format v0.1","title":"Apply of a plan with holes"}

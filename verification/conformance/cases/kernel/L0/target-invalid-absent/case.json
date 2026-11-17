@@ -1,0 +1,1 @@
+{"expect":{"code":"TARGET_INVALID","outcome":"refused"},"id":"target-invalid-absent","kind":"apply","level":"L0","principle":"Apply needs an existing target directory; it does not create one","source":"conformance README, Apply","target":"absent","title":"The target does not exist"}

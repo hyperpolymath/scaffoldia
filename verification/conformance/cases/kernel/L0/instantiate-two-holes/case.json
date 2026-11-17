@@ -1,0 +1,1 @@
+{"expect":{"outcome":"ok","results":{"NOTICE.adoc":"written","README.adoc":"written"}},"id":"instantiate-two-holes","kind":"instantiate","level":"L0","principle":"Every declared token is replaced; the result is a closed plan with recomputed hashes","source":"conformance README, Instantiate","title":"Instantiation fills two holes across two blobs"}

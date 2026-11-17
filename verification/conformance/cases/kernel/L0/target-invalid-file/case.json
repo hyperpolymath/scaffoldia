@@ -1,0 +1,1 @@
+{"expect":{"code":"TARGET_INVALID","outcome":"refused"},"id":"target-invalid-file","kind":"apply","level":"L0","principle":"Apply needs an existing target directory","source":"conformance README, Apply","target":"file","title":"The target is a regular file"}

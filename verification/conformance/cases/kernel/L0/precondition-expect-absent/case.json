@@ -1,0 +1,1 @@
+{"expect":{"code":"PRECONDITION","outcome":"refused"},"id":"precondition-expect-absent","kind":"apply","level":"L0","principle":"No silent overwrite: there is no overwrite-whatever-is-there","source":"ADR-0002, Safety invariants and Acceptance evidence","title":"expect absent, but a file with other content exists"}

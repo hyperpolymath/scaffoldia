@@ -1,0 +1,1 @@
+{"holes":["OWNER","REPO"],"inputs":[{"name":"spine","repo":"hyperpolymath/rsr-template-repo","rev":"4d3c2b1a09f8e7d6c5b4a3928170f6e5d4c3b2a1"}],"ops":[{"blob":"sha256:e358d074e66094ccdefcf175658232ae944b02a8917ba374dd85b910cb34bfd9","expect":"absent","mode":"644","op":"write","path":"README.adoc","source":{"input":"spine","path":"README.adoc"}}],"plan_version":"0.1"}
