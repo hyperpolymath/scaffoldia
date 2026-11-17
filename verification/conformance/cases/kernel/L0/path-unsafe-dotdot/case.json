@@ -1,0 +1,1 @@
+{"expect":{"code":"PATH_UNSAFE","outcome":"refused"},"id":"path-unsafe-dotdot","kind":"apply","level":"L0","principle":"No write outside the target or into repository metadata","source":"conformance README, Safe paths","title":"A path with a '..' segment"}

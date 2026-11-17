@@ -1,0 +1,1 @@
+{"holes":[],"inputs":[{"name":"spine","repo":"hyperpolymath/rsr-template-repo","rev":"4d3c2b1a09f8e7d6c5b4a3928170f6e5d4c3b2a1"}],"ops":[{"expect":{"sha256":"458417e207076307e3f131d19bf5f67c6423a3298beb4af6a196f61849ae0157"},"op":"delete","path":"gone.txt","source":{"input":"spine","path":"gone.txt"}}],"plan_version":"0.1"}

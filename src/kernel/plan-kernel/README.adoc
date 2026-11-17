@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= plan-kernel
+
+The pure decision core of a file-plan kernel. A *plan* is data: a sorted list
+of file writes and deletes with preconditions and provenance, content held by
+SHA-256. This crate decides, without I/O, whether a plan is well formed and
+safe, how an open plan is instantiated, and — given observations of a target
+directory — either a refusal or the exact list of effects. A thin binary
+performs the reads and writes around it.
+
+* No dependency beyond `std`; `#![forbid(unsafe_code)]`.
+* SHA-256 and Unicode NFC are injected through the `Prims` trait.
+* Plan format: v0.1. Refusal codes: the kernel half of the closed list.
+* Verification plan: `PROOF-PLAN.adoc` (Creusot with Pearlite, and Verus;
+  status *not run*).
+
+== Modules
+
+[cols="1,3",options="header"]
+|===
+| Module | Role
+| `json` | Number-free JSON value; canonical (RFC 8785) serialisation; J-1 byte check.
+| `plan` | Typed plan, closed-world well-formedness, pins.
+| `path` | Safe-path predicate, collision key, ancestors.
+| `check` | Closed, safe, unique, collision-free; blob integrity.
+| `apply` | Observations, the refuse-or-effects decision, the receipt.
+| `instantiate` | Answers against holes, single-pass substitution, residue.
+| `model` | In-memory target model for idempotence and all-or-nothing.
+| `refusal` | Refusal codes and their wire form.
+|===
+
+== Location and intended home
+
+This crate is the candidate for the plan level of
+`hyperpolymath/hybrid-automation-router` (HAR), named `har-il` in HAR
+ADR-0002 and not yet built there. It is being developed first as a spike in
+the Scaffoldia repository (`src/kernel/plan-kernel/`), which will later
+consume it as a pinned module.
+
+Moving it needs nothing but its path and workspace membership: it has no
+dependencies, no identifiers or error text tied to its current host, and no
+build script. It deliberately does *not* depend on any HAR crate today
+(`har-meta` still carries a retired A2ML module). What moves with it: this
+README, `PROOF-PLAN.adoc`, and the plan format v0.1 text, which currently
+lives in the host repository's conformance suite.

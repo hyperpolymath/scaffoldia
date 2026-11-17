@@ -20,7 +20,97 @@
 | *Total* | *7* | *0* | *0* | *0* | *7*
 |===
 
-*Overall*: 0% proven
+*Census* (a count with its denominator, never a percentage: standards
+PROOF-POLICY §8.4): engineering obligations in the table above, 0 discharged and
+7 open (of 7). Theory claims (the ADR-0003 plan laws, next section): Agda leg
+`proven` 19 (of 19); `PWG-3` or better 0, `ungraded` 19 (of 19).
+
+== Theory claims: ADR-0003 plan laws
+
+The algebra of plan composition and application that ADR-0003 ("Composition is
+a join, not an overwrite") lists. Theory obligations (PROOF-POLICY §1): Agda is
+the source, rechecked in Rocq and Lean (§2).
+
+* *Sources*: `verification/proofs/agda/PlanLaws/` (graded root `All.agda`;
+  one module-level comment per file says what it proves).
+* *Invocation*: `cd verification/proofs/agda && agda --safe --without-K
+  --cubical-compatible PlanLaws/All.agda` (§2.1), run by `just
+  proof-check-plan-laws` (`scripts/check-plan-laws.sh`). The gate also refuses
+  any other pragma, a hole, a warning, a postulate in the cone, a prover
+  postulate outside the trusted base, and a file outside the cone. Negative
+  controls: `just proof-check-plan-laws-controls` (`tests/reject/PlanLaws/Controls/`,
+  §8.5.4), each refused for its stated reason.
+* *Checker*: Agda 2.7.0.1, the upstream release binary (see the deviation
+  below). Ran 2026-11-17 in an agent session, not in CI.
+* *Library cone*: none. No agda-stdlib and no `.agda-lib`; the import cone of
+  `PlanLaws/All.agda` (`--dependency-graph`) is the nine `PlanLaws` modules and
+  `Agda.Primitive`. Postulates in the first-party cone: 0. Trusted base (§8.4):
+  the four prover postulates of `Agda.Primitive`, `Level` (`BUILTIN LEVEL`),
+  `lzero` (`LEVELZERO`), `lsuc` (`LEVELSUC`), `_⊔_` (`LEVELMAX`).
+* *Equality*: plans by `≈` (lookup agrees at every path); outcomes by `~` (any
+  two conflicts are related, `ok r ~ ok s` iff `r ≈ s`); file systems by `≗`
+  (pointwise). No function extensionality is used or assumed.
+* *Model*: paths and contents abstract with decidable equality; a desired state
+  is a file with content or absent; a plan is read through `lookup`; `p ⊔ q`
+  returns `conflict x` or `ok (p ∪ q)`; `apply` overrides a total file system.
+  Preconditions (`expect`) are outside the algebra and return in
+  `PlanLaws/Kernel.agda`. An authorised replacement (issue #70) is out of scope.
+* *PWG*: `ungraded` for every row. §8.2 grants `PWG-3` only with a receipt that
+  records the Agda version, library pin, flags and import cone, and §8.4 derives
+  a grade from receipts, never asserts it. No receipt exists yet: the run above
+  was on a commit that is not on `main`. What is missing is a proof receipt
+  (§8.5.1, `verification/receipts/*_praxis.deed`) for the commit as it lands on
+  `main`; with it the reader would derive `PWG-3`. `PWG-3` would still owe both
+  recheck legs (§8.4, rule 1).
+* *Recheck legs*: Rocq and Lean both `open`, not attempted (route: Dedukti
+  transport first, hand re-proof as fallback, no Mathlib; §2).
+
+[cols="1,5,1,1,1,1,2",options="header"]
+|===
+| ID | Claim (statement as proved; file:line) | Token | PWG | Rocq leg | Lean leg | Receipt
+
+| PL-1 | `conflict-sound`: if `p ⊔ q ≡ conflict x`, then `p` and `q` give `x` two different desired states. `Join.agda:183` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-2 | `conflict-complete`: if some path has `lookup p x ≡ just a`, `lookup q x ≡ just b` and `a ≢ b`, then `p ⊔ q ≡ conflict y` for some `y`. `Join.agda:190` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-3 | `join-lub`: if `p ⊔ q ≡ ok r`, then `r` extends `p` and `q` and is extended by every common extension of both. `Join.agda:263` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-4 | `join-defined-sym`: if `p ⊔ q` is defined, so is `q ⊔ p`. `Join.agda:418` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-5 | `join-comm`: `p ⊔ q ~ q ⊔ p` (both conflicts, or both `ok` with `≈` results). `Join.agda:422` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-6 | `join-assoc-defined`: `(p ⊔ q) ⊔ᴼ ok r` is defined iff `p`, `q`, `r` are pairwise compatible iff `ok p ⊔ᴼ (q ⊔ r)` is defined. `Join.agda:454` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-7 | `join-assoc`: `(p ⊔ q) ⊔ᴼ ok r ~ ok p ⊔ᴼ (q ⊔ r)`. `Join.agda:480` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-8 | `join-idem`: `p ⊔ p ~ ok p`. `Join.agda:495` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-9 | `join-cong`: `p ≈ p′ → q ≈ q′ → p ⊔ q ~ p′ ⊔ q′`. `Join.agda:504` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-10 | `apply-idem`: `apply p (apply p fs) ≗ apply p fs`. `Apply.agda:97` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-11 | `apply-join`: if `p ⊔ q ≡ ok r`, then `apply r fs ≗ apply q (apply p fs)`. `Apply.agda:121` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-12 | `apply-comm`: for compatible `p`, `q`, `apply q (apply p fs) ≗ apply p (apply q fs)`. `Apply.agda:127` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-13 | `commute-compatible`: if the two orders agree (`≗`) on one file system, `p` and `q` are compatible (with PL-12: `apply-comm-iff`, `Apply.agda:147`). `Apply.agda:137` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-14 | `apply-faithful`: given one content value, if `apply p fs ≗ apply q fs` for every `fs`, then `p ≈ q`. `Apply.agda:165` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-15 | `safe-join-ok`: for any predicate `Safe` on paths, if `p ⊔ q ≡ ok r` and every path of `p` and of `q` is safe, every path of `r` is safe. `Safety.agda:79` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-16 | `plan-safe-join`: for a symmetric, irreflexive `Clash`, if `p ⊔ q ≡ ok r` and `p`, `q` are plan-safe, then `r` is plan-safe iff no path of `p` clashes with a path of `q`. `Safety.agda:126` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-17 | `plan-safety-not-preserved`: if `Safe x`, `Safe y` and `Clash x y`, the one-entry plans at `x` and at `y` are plan-safe and join, and the join is not plan-safe. `Safety.agda:150` (instance: `case-fold-counterexample`, `Example.agda:84`) | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-18 | The total join `⊔ᴼ` on outcomes is a semilattice up to `~` with unit `ok []` and conflict as top: `⊔ᴼ-cong`, `⊔ᴼ-comm`, `⊔ᴼ-assoc`, `⊔ᴼ-idem`, `⊔ᴼ-unit`. `Semilattice.agda:40,49,55,61,67` | `proven` | `ungraded` | `open` | `open` | none yet
+| PL-19 | `kapply-idem`: for a kernel plan in which lookup finds each operation's state (`unique-functional`: true when no two operations share a path), a second kernel apply is accepted, finds every path already in its desired state, and changes nothing; `kapply-refines`: an accepted kernel apply is `apply`. `Kernel.agda:175,159,115` | `proven` | `ungraded` | `open` | `open` | none yet
+|===
+
+ADR-0003 law 2 ("a join of safe plans is safe") holds for per-path safety
+(PL-15) and is false for the plan-level conditions of plan format v0.1 (no
+case-fold collision, no directory-prefix clash): PL-16 gives the exact
+condition and PL-17 the counterexample. A kernel must re-check those
+conditions on the composed plan.
+
+*Deviation* (PROOF-POLICY §6), state `open`: the leg above is the Agda leg; the
+tool is Agda 2.7.0.1, installed from the upstream release archive
+`Agda-v2.7.0.1-linux.tar.xz` (SHA-256
+`975b515a14877ab6bce5bfc641e16c4a3ee52ca5d7f846577dee80aa2145db8a`; binary
+`bin/agda` SHA-256
+`6de41437c14c05c9fe576d724cc67386444c0fa9fee662a08250fefb91bee8b6`), not through
+Guix or the container, because the session had no Guix and `build/guix.scm`
+does not provide Agda. `scripts/check-plan-laws.sh` asserts the version and
+fails on a mismatch. It closes when Agda comes from the repository's Guix
+manifest or container and a CI lane runs `just proof-check-plan-laws`; no CI
+lane runs it today.
+
+*Rust kernel*: the refinement from `PlanLaws/Kernel.agda` to kernel code is an
+engineering obligation for Creusot (contracts in Pearlite) and Verus
+(PROOF-POLICY §1.2). Status `open` for both: no kernel code exists.
 
 == Proofs Done
 
@@ -66,6 +156,9 @@
 | ABI-5 | C ABI compliance | ABI | Idris2 | P1 | 4h
 | TP-1 | Core data type well-formedness | TP | Idris2 | P1 | 4h
 | TP-2 | Public API type safety | TP | Lean4 | P2 | 4h
+| PL-1..19 (Rocq) | Recheck leg for the plan laws: Dedukti transport first, hand re-proof as fallback | Theory | Rocq | P2 | not estimated
+| PL-1..19 (Lean) | Recheck leg for the plan laws: core library only, no Mathlib | Theory | Lean | P2 | not estimated
+| PL-receipt | Proof receipt for PL-1..19 on a commit on main (PROOF-POLICY §8.5.1), so a grade can be derived | Theory | Agda | P1 | not estimated
 |===
 
 == Verification Commands
@@ -80,6 +173,11 @@ just proof-check-lean4
 
 # Check all Agda proofs
 just proof-check-agda
+
+# Check the ADR-0003 plan laws (canonical flags; fatal if agda is absent),
+# and show that the gate refuses each negative control
+just proof-check-plan-laws
+just proof-check-plan-laws-controls
 
 # Check all Coq proofs
 just proof-check-coq
@@ -98,4 +196,5 @@ panic-attack assail --proofs-only
 | Date | Change | By
 
 | 2026-04-04 | Initial proof status tracking | Template
+| 2026-11-17 | ADR-0003 plan laws PL-1 to PL-19: Agda leg `proven`, `ungraded` (no receipt yet), recheck legs `open`; census replaces the percentage | Agent (Claude)
 |===

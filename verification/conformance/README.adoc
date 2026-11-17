@@ -1,0 +1,230 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Scaffoldia Conformance Suite
+:toc:
+:sectnums:
+
+Engine-neutral cases that say what a Scaffoldia kernel and a Scaffoldia planner
+must do, independent of the language either is written in. This suite is the
+selection gate of ADR-0002 and the acceptance evidence of ADR-0003.
+
+*Status:* specification v0.1 (proposed with ADR-0003). A case, runner or
+engine is real only when this page's "Evidence" section records a run.
+
+== The two programs under test
+
+[cols="1,4",options="header"]
+|===
+| Program | Contract
+| Kernel  | Checks, instantiates and applies a plan. Small, trusted, offline.
+| Planner | Produces a plan from pinned inputs. Any language, untrusted.
+|===
+
+A *minimal engine* (Tier 0) is a kernel used with published plans. A *composer*
+(Tier 1) adds a planner. Both use the plan format below.
+
+== Plan format v0.1
+
+A plan is one I-JSON object serialised by JCS. It is internal engine output,
+not an RSR document format. Content is never inline: each write names a blob by
+SHA-256, held in a blob directory at `sha256/<64 lowercase hex>`.
+
+[source,json]
+----
+{"holes":[],
+ "inputs":[{"name":"spine","repo":"owner/name","rev":"<40 hex>"}],
+ "ops":[{"blob":"sha256:<64 hex>","expect":"absent","mode":"644","op":"write",
+         "path":"README.adoc","source":{"input":"spine","path":"README.adoc"}}],
+ "plan_version":"0.1"}
+----
+
+`inputs`:: The pinned sources. `rev` is a full commit id. A plan with an input
+that is not pinned is refused.
+`holes`:: Names (`[A-Z][A-Z0-9_]*`) a published plan leaves open. A plan with a
+non-empty `holes` is _open_; with an empty one, _closed_. Only a closed plan
+can be applied.
+`ops`:: Sorted by `path` (bytewise), at most one per path.
++
+* `write`: `path`, `blob`, `mode` (`644` or `755`), `expect`, `source`.
+* `delete`: `path`, `expect` (a `sha256`, never `absent`), `source`.
++
+`expect` is the precondition on the target: `"absent"`, or
+`{"sha256":"<64 hex>"}` (the content the planner saw as the base). There is no
+"overwrite whatever is there".
+`source`:: `{"input": <name in inputs>, "path": <path inside it>}`. Every
+operation has one. A replacement authorised by an input contract also carries
+`"replaces": {"input": ..., "path": ...}`.
+
+=== Safe paths
+
+A path is *safe* when all of these hold: relative; segments separated by `/`;
+no empty segment, `.` or `..`; no backslash, NUL or control character; Unicode
+NFC; first segment is not `.git`. A plan is *safe* when every path is safe; no
+two paths are equal after case folding; and no path is a proper directory
+prefix of another.
+
+=== Instantiate (open plan to closed plan)
+
+Given answers `{"NAME":"value",...}`: every hole must have an answer and every
+answer must name a hole, else refuse. In each blob the token `{{NAME}}` is
+replaced for declared holes only. If any `{{...}}` token remains in any blob
+afterwards, refuse (`RESIDUE`): a child must not carry unfilled template text.
+Output: a closed plan with recomputed blob hashes and `holes` empty.
+
+=== Apply
+
+. Check the plan (well formed, closed, safe, every blob present with the
+  right hash).
+. Check the target: it exists and is a directory; no ancestor of any path is a
+  symbolic link; for each operation, either the target already has the desired
+  state (then the operation is a no-op), or its `expect` holds. If any check
+  fails, refuse and *write nothing*.
+. Perform the operations. Emit a receipt (JCS): plan digest, and per path one
+  of `written`, `unchanged`, `deleted`, `already-absent`.
+
+Consequences the cases assert: applying twice gives the same tree and a
+receipt of only `unchanged`/`already-absent`; a refused plan leaves the target
+byte-identical.
+
+== Command-line protocol
+
+The runner is given commands; it does not care what they are written in.
+
+[source]
+----
+KERNEL check       --plan F --blobs D
+KERNEL instantiate --plan F --blobs D --answers F --out F --out-blobs D
+KERNEL apply       --plan F --blobs D --target D --receipt F
+PLANNER plan       --inputs D --out F --out-blobs D
+----
+
+Exit `0`: done. Exit `10`: *refused*, with one JCS object on standard output,
+`{"refused":"<CODE>","detail":"..."}`. Any other exit is a crash and fails the
+case. A refusal is a correct, expected outcome, not an error.
+
+Refusal codes (closed list; adding one is a format version change):
+
+[cols="1,3",options="header"]
+|===
+| Code | Meaning
+| `MALFORMED` | Not a v0.1 plan, or not JCS.
+| `PLAN_VERSION` | A plan version this kernel does not implement.
+| `SOURCE_UNPINNED` | An input without a full commit id, or an op naming no input.
+| `PATH_UNSAFE` | A path that is not safe.
+| `PATH_DUPLICATE` | Two operations on one path, or ops not sorted.
+| `PATH_COLLISION` | Case-fold collision, or a file/directory prefix clash.
+| `BLOB_MISSING` / `BLOB_MISMATCH` | Blob absent, or its hash is wrong.
+| `OPEN_PLAN` | Apply was asked for a plan with holes.
+| `HOLE_UNFILLED` / `HOLE_UNKNOWN` | Answers do not match the holes.
+| `RESIDUE` | A `{{...}}` token survived instantiation.
+| `PRECONDITION` | An `expect` does not hold on the target.
+| `TARGET_SYMLINK` / `TARGET_INVALID` | Unsafe or missing target.
+| `PIN_INVALID` | Planner: a source pin is missing, ambiguous or unresolvable.
+| `CAPABILITY_UNKNOWN` | Planner: a requested capability is not in the gate table.
+| `CONFLICT` | Planner: two inputs write one path differently, unauthorised.
+| `LOCK_CONFLICT` | Planner: two lock fragments give one action two hashes.
+| `TOOLCHAIN_MISSING` | Planner: a required tool is absent and not skippable.
+|===
+
+== Case layout
+
+----
+cases/<kernel|planner>/<L0|L1|L2|L3>/<id>/
+  case.json      {"expect":{"outcome":"ok"|"refused","code":"..."},"id":...,
+                  "kind":"check"|"instantiate"|"apply"|"apply-twice"|"plan",
+                  "level":...,"principle":"...","source":"...","title":"..."}
+  plan.json  blobs/  answers.json  before/  expected/  inputs/   (as the kind needs)
+----
+
+`source` says where the case came from (an issue and item, or an ADR).
+`principle` names the invariant the case instantiates. `before/` is the
+starting tree, `expected/` the exact resulting tree. For `refused` cases the
+runner also asserts the target is unchanged.
+
+Optional case fields (read by `run.sh`; additive, pending ratification with
+the questions recorded alongside ADR-0003):
+
+`expect.results`:: For an accepted `apply` or `instantiate` case, the receipt
+result per path, e.g. `{"README.adoc":"unchanged"}`. Distinguishes "already
+realised" from "rewritten with the same bytes", which the tree alone cannot.
+`expect.tree_excludes`:: Strings that must occur in no file of the resulting
+tree (child identity: the publisher's own name).
+`target`:: `"directory"` (default), `"absent"` or `"file"`: what the runner
+puts at the target path, for `TARGET_INVALID` cases.
+
+A missing `before/` or `expected/` is an empty tree (git cannot hold an empty
+directory). Accepted trees are compared on files, links and executable bits;
+refused trees also on directories. Each case runs in a sandbox whose inputs
+are copies and whose target has a sibling directory `outside/`; any write
+outside the target, through a link or otherwise, fails the case.
+
+== Levels
+
+[cols="1,4",options="header"]
+|===
+| Level | A passing engine has shown
+| `L0` | Kernel safety and reference mint: every refusal above, idempotence,
+all-or-nothing apply, instantiation without residue, child identity distinct
+from the publisher's.
+| `L1` | Composition: packs and features joined, conflicts refused, authorised
+replacement recorded, lock fragments merged by action identity.
+| `L2` | Retrofit: three-way against a pinned parent, unrelated user changes
+preserved, conflicts stop the plan, unclassifiable content reported.
+| `L3` | Sustain: every check a child inherits passes in the child, not only in
+the publisher's own repository.
+|===
+
+A level passes only if every case at and below it passes. Skipped cases are
+counted and printed as skipped; a run with skips does not pass its level.
+
+=== CI check
+
+The CI check named `Conformance L0` (`.github/workflows/e2e.yml`) runs, on every
+pull request, `verification/conformance/check-l0.sh`, the same command list as
+`just conformance`: the locked release build of the kernel, `gen-cases.sh --check`,
+`run.sh --level L0` and `selftest.sh --level L0`. As levels are added the name
+will change to the highest level passed (`Conformance L1`, and so on). No run of
+this check on GitHub is recorded yet.
+
+== Negative control
+
+`controls/` holds deliberately wrong kernels (for example one that writes any
+path it is given). The suite must *fail* each of them; a suite that passes a
+control is itself broken, and the runner's self-test says so.
+
+== Evidence
+
+This section is updated only with a command, a commit and its output.
+
+=== 2026-11-17: Rust kernel spike, L0
+
+Commit `35752ee` (branch `wo/KERNEL`; a local commit, so the id changes if it
+is rebased). Command, from a clean `src/kernel/target/`:
+
+[source,bash]
+----
+just conformance
+# = cargo build --release --locked --manifest-path src/kernel/Cargo.toml
+#   verification/conformance/gen-cases.sh --check
+#   verification/conformance/run.sh --level L0 --kernel src/kernel/target/release/scaffoldia-kernel
+#   verification/conformance/selftest.sh --level L0
+----
+
+Observed (exit 0; rustc 1.97.0, jq 1.7, GNU coreutils, Linux):
+
+----
+gen-cases: committed cases match the generator (47 cases)
+L0: 47 ok, 0 FAIL, 0 SKIP
+level L0: PASS (47 cases)
+control naive-kernel.sh: FAILED by the suite, as required (40 of 47 cases caught it)
+control no-atomicity-kernel.sh: FAILED by the suite, as required (3 of 47 cases caught it)
+control refuse-all-kernel.sh: FAILED by the suite, as required (43 of 47 cases caught it)
+selftest: PASS (3 controls, each failed by the suite at L0)
+----
+
+The no-atomicity control is caught only by `all-or-nothing` and
+`target-symlink` (both leave its first write behind) and by
+`residue-from-answer` (it substitutes repeatedly). Only `L0` kernel cases
+exist; there are no planner cases and no `L1`–`L3` cases, so nothing is
+claimed above `L0`. This is a local run, not CI. The kernel's Creusot
+(Pearlite) and Verus contracts are *not run*
+(`src/kernel/plan-kernel/PROOF-PLAN.adoc`).

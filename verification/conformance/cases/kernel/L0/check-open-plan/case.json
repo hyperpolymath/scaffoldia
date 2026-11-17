@@ -1,0 +1,1 @@
+{"expect":{"outcome":"ok"},"id":"check-open-plan","kind":"check","level":"L0","principle":"An open plan is a valid plan; only apply requires it closed","source":"conformance README, Plan format v0.1","title":"check accepts a well-formed open plan"}

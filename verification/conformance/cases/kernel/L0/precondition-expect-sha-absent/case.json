@@ -1,0 +1,1 @@
+{"expect":{"code":"PRECONDITION","outcome":"refused"},"id":"precondition-expect-sha-absent","kind":"apply","level":"L0","principle":"A replacement of something that is not there is not a creation","source":"conformance README, Apply","title":"expect sha256, but the path is absent"}

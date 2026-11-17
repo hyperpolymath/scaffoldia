@@ -1,0 +1,1 @@
+{"expect":{"code":"MALFORMED","outcome":"refused"},"id":"malformed-not-json","kind":"apply","level":"L0","principle":"Only a v0.1 plan is accepted","source":"conformance README, Plan format v0.1","title":"A plan that is not JSON"}

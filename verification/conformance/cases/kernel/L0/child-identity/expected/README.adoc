@@ -1,0 +1,3 @@
+= example-child
+
+A repository of example-org, minted from a published plan.

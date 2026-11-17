@@ -1,0 +1,1 @@
+{"expect":{"code":"SOURCE_UNPINNED","outcome":"refused"},"id":"unpinned-undeclared-input","kind":"apply","level":"L0","principle":"Every write has provenance in a pinned input","source":"ADR-0002, Safety invariants and Acceptance evidence","title":"An operation naming an undeclared input"}

@@ -1,0 +1,1 @@
+{"expect":{"code":"RESIDUE","outcome":"refused"},"id":"residue","kind":"instantiate","level":"L0","principle":"A child must not carry unfilled template text","source":"conformance README, Instantiate","title":"An undeclared token survives instantiation"}

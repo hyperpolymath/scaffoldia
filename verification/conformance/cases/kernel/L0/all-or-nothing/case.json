@@ -1,0 +1,1 @@
+{"expect":{"code":"PRECONDITION","outcome":"refused"},"id":"all-or-nothing","kind":"apply","level":"L0","principle":"All or nothing: a refused plan leaves the target byte-identical, including the first operations","source":"conformance README, Apply","title":"The last operation fails its precondition"}

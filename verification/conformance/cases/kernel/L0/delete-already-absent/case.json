@@ -1,0 +1,1 @@
+{"expect":{"outcome":"ok","results":{"gone.txt":"already-absent"}},"id":"delete-already-absent","kind":"apply","level":"L0","principle":"A delete whose desired state (absent) already holds reports already-absent","source":"conformance README, Apply","title":"Deleting a path that is not there is a no-op"}
