@@ -331,6 +331,25 @@ h1="$(blob $'= Repository of {{OWNER}}\n')"; h2="$(blob $'Licence holder: {{LICE
 plan "$(w NOTICE.adoc "$h2" 644 absent)" "$(w README.adoc "$h1" 644 absent)"
 answers '{"OWNER":"alice"}'
 
+new_case residue-from-answer instantiate refused RESIDUE "An answer that itself contains a token" \
+  "Substitution is one pass and residue is checked on the result, so an answer cannot smuggle in template text" "$SRC_INST"
+HOLES='["OWNER","REPO"]'
+h1="$(blob $'= {{REPO}} of {{OWNER}}\n')"
+plan "$(w README.adoc "$h1" 644 absent)"
+answers '{"OWNER":"{{REPO}}","REPO":"widget"}'
+
+# From the engine-neutral mint-defect list (work order T6, row SC-T-002).
+new_case instantiate-literal-answer instantiate ok "" "An answer with shell and sed metacharacters renders literally" \
+  "Answers are data: substituted byte for byte, never interpreted" \
+  "rsr-template-repo tests/e2e/use_template_mint_test.sh (existing control: answer with '&' and '|'), as listed in T6 SC-T-002" \
+  '{"expect":{"results":{"README.adoc":"written"}}}'
+HOLES='["OWNER"]'
+h1="$(blob $'= Repository of {{OWNER}}\n')"
+plan "$(w README.adoc "$h1" 644 absent)"
+# shellcheck disable=SC2016 # the dollar and backticks are literal answer text
+answers '{"OWNER":"a&b|c\\1 $HOME `x` {{ y }} /z"}'
+put expected README.adoc $'= Repository of a&b|c\\1 $HOME `x` {{ y }} /z\n'
+
 # ── refusals: target state ──────────────────────────────────────────────────
 
 new_case precondition-expect-absent apply refused PRECONDITION "expect absent, but a file with other content exists" \
