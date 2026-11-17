@@ -92,7 +92,10 @@ Laws to state and prove (theory; Agda under
 
 . join is commutative, associative and idempotent wherever it is defined, so
   pack order cannot change the result;
-. a join of safe plans is safe;
+. every path of a join of safe plans is safe, but the join is a safe plan
+  only when no path of one plan clashes with a path of the other (case-fold
+  collision or directory prefix), so the kernel checks plan-level safety
+  again on the composed plan;
 . applying a plan twice equals applying it once;
 . for compatible plans, applying the join equals applying one then the other.
 
