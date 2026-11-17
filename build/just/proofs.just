@@ -9,7 +9,7 @@
 # `just proof-check-all` for the full sweep.
 
 # Check all formal proofs (Idris2 + Lean4 + Agda + Coq)
-proof-check-all: proof-check-idris2 proof-check-lean4 proof-check-agda proof-check-coq proof-scan-dangerous
+proof-check-all: proof-check-plan-laws proof-check-plan-laws-controls proof-check-idris2 proof-check-lean4 proof-check-agda proof-check-coq proof-scan-dangerous
     @echo "=== All proof checks complete ==="
 
 # Check Idris2 proofs (ABI, types, dependent type proofs)
@@ -86,6 +86,20 @@ proof-check-agda:
         exit 1
     fi
     echo "PASS: All Agda proofs verified"
+
+# Runs agda --safe --without-K --cubical-compatible (standards PROOF-POLICY
+# §2.1) on verification/proofs/agda/PlanLaws. Fatal if agda is absent or not
+# the pinned version; also fails on a pragma, hole, postulate, warning or
+# unchecked file. See the header of scripts/check-plan-laws.sh.
+# Check the ADR-0003 plan laws (Agda; fatal if agda is absent)
+proof-check-plan-laws:
+    @bash scripts/check-plan-laws.sh
+
+# Each file in tests/reject/PlanLaws/Controls must be refused, for the reason
+# its EXPECT-REFUSED line names.
+# Run the negative controls of the plan-law gate
+proof-check-plan-laws-controls:
+    @bash scripts/check-plan-laws.sh --controls
 
 # Check Coq proofs
 proof-check-coq:
