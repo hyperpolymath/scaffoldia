@@ -145,17 +145,59 @@ no host-language planner: Nickel's merge already refuses conflicting values,
 which is the join above. The harvested registry is already Nickel.
 |===
 
+== Owner decisions recorded (2026-11-17)
+
+Given through the question selector on that date.
+
+* *Where the kernel lives.* Scaffoldia consumes the hybrid automation router
+  as its own module: the plan level is developed at source in HAR (its planned
+  `har-il`) and Scaffoldia takes it as a pinned dependency, upgraded whenever
+  Scaffoldia releases. Until HAR has a plan level, the spike in
+  `src/kernel/plan-kernel` stands in for it. That crate has no dependency and
+  nothing Scaffoldia-specific in it, so moving it is a change of path and
+  workspace only. Not done yet: the move, the pin, and a check that the pin is
+  current.
+* *Carrier.* A deed attests facts about a repository; a plan or graph is a
+  computed message between tools. They are different kinds of thing with one
+  carrier each: deed clauses for declarations, I-JSON/JCS for plans. HAR
+  ADR-0002 still names A2ML, which is retired; changing that is a HAR change.
+* *First retrofit.* Scaffoldia's first real retrofit is Scaffoldia itself. It
+  tracks 118 `.a2ml` files and has no `scaffoldia_chora.deed`. Hand conversion
+  is forbidden, so the translation belongs to kyX (D313). The retrofit case
+  is: given this repository as it is, produce the plan that leaves it with a
+  deed and no `.a2ml`, and refuse where kyX has no mapping. It is an `L2` case
+  and is not written yet. The `.a2ml` files stay until then.
+* *Control plane.* No separate lifecycle repository (standards#636):
+  Scaffoldia owns birth and enrolment (retrofit), chora-registry the census
+  and de-registration, HAR lifecycle events and plans, gitbot-fleet the acting.
+* *Toolchains by derivation.* A repository's toolchain and hooks are generated
+  from the languages its deed declares (standards#698, #706, #917). This is a
+  planner requirement at `L1`; nothing implements it yet.
+
+== Open questions the proofs and the spike raised
+
+. *Provenance of a merged operation.* Two packs writing identical content
+  merge, but each operation has one `source`. Unless the merged provenance is
+  defined (a set, or a canonical choice), the plan bytes depend on pack order
+  although its effect does not.
+. *Which conflicting path is reported* depends on argument order. Cases should
+  assert the code and that the named path conflicts, not a particular path,
+  unless the format fixes one (for example the bytewise least).
+. *Residue and other template syntaxes.* The hole token collides with `just`
+  and, read literally, with GitHub Actions expressions. The spike counts only
+  hole-style names; a published plan still cannot carry a Justfile verbatim.
+. *Answer validation.* v0.1 cannot refuse a bad answer value, and has no holes
+  in paths, so a published plan cannot name `<repo>_chora.deed`.
+
+The spike's reading of each ambiguous point in the specification is asserted
+by a case. `verification/conformance/backlog/cases-from-mint-defects.jsonl`
+holds 72 cases (39 `L0`, 13 `L1`, 9 `L2`, 11 `L3`) derived from defects found
+when repositories were minted from `rsr-template-repo`. Most need a planner or
+a real spine and are not yet runnable; two were taken into the `L0` suite.
+
 == What this does not decide
 
 * The engine (ADR-0002 selection gate stands).
-* *Where the kernel lives.* The plan level is what HAR calls `har-il`. Building
-  it in HAR and consuming it here is the "solutions at source" arm; building it
-  here first is quicker and can move later because the plan format, not the
-  code location, is the interface. Owner decision; spike code is not a
-  commitment.
-* *The carrier for the graph level.* HAR ADR-0002 names A2ML, which has since
-  been retired estate-wide. That is HAR's decision to revisit; Scaffoldia
-  plans are I-JSON/JCS and its declarations are deed clauses.
 * Any forge mutation, fan-out, licence or SPDX edit (ADR-0002 limits stand).
 
 == Consequences
