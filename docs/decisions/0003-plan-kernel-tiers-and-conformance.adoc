@@ -1,0 +1,174 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= ADR-0003: Plan Kernel, Tiers and an Engine-Neutral Conformance Suite (proposed)
+:toc:
+:sectnums:
+
+*Status:* Proposed — refines ADR-0002; does not select an engine.
+*Date:* 2026-11-17
+*Scope:* Where safety lives, how a small user and a large estate share one
+system, and how the ADR-0002 engine candidates are compared.
+
+== Context
+
+ADR-0002 leaves the engine open and asks for equal-scope spikes. Three facts
+recorded since then change the shape of that question.
+
+. *The owner wants one system at two sizes* (2026-11-17). A full composer for
+  an estate; and, for someone with a few repositories and less ambition, a
+  minimal engine. The composer must be usable "sitting atop the minimal
+  engine", not beside it.
+. *The estate already has a meta-model for this.*
+  `hyperpolymath/hybrid-automation-router` (HAR) ADR-0002 defines a two-level
+  representation: a declarative _resource graph_ (resources, dependencies,
+  provenance, realisation status, ownership handoff) and an imperative _plan_
+  of idempotent primitive operations; _lowering_ takes graph to plan and
+  _lifting_ takes observed state back to a graph. HAR ADR-0003 takes software
+  installation as its first resource domain. At commit `0176b7d` the Rust
+  workspace builds and its 115 tests pass (run 2026-11-17); the graph level
+  (`har-meta`) exists, the plan level (`har-il`) does not yet.
+  Minting is lowering. Retrofit is lifting, comparing, and lowering the
+  difference. Provisioning is HAR's install domain. Scaffoldia's
+  `CompositionPlan`, `ReconciliationPlan` and `ExecutionReceipt` (ADR-0002)
+  are the plan level of that same model, for the resource domain "files and
+  settings of a repository".
+. *Every engine candidate in ADR-0002 would have to re-earn the same safety
+  invariants* (no path escape, no silent overwrite, idempotent apply,
+  provenance on every write). That is the expensive, proof-worthy part, and it
+  does not depend on which language composes the plan.
+
+== Decision (proposed)
+
+=== Separate the planner from the kernel
+
+[cols="1,3",options="header"]
+|===
+| Part | Role
+
+| *Plan* | Data. A versioned, deterministic list of file operations with
+preconditions and provenance, content held by hash. Internal engine output
+(ADR-0002: not a new RSR document format). I-JSON serialised by JCS.
+| *Kernel* | Small and trusted. Checks a plan is well formed and safe, then
+applies it to a staging target and emits a receipt. Refuses anything it cannot
+show safe. It never composes, never reads canon, never contacts a forge.
+| *Planner* | Large and untrusted. Reads canon, spine, packs, answers and the
+target's deed, and produces a plan. Any language. A wrong planner can produce
+a wrong repository; it cannot produce an unsafe write, because the kernel
+checks the plan it is given.
+|===
+
+This is the proof-checker arrangement (a small kernel checks what a large
+untrusted tactic produced), applied to file plans. It moves the ADR-0002
+safety invariants out of the engine-selection question: they are properties of
+the kernel, stated once and verified once.
+
+=== Two tiers, one plan format
+
+* *Tier 0, the minimal engine* is the kernel plus _published plans_. Canon (or
+  any publisher) ships a plan for "a conformant repository of profile P at
+  canon version V" with a small set of named holes (owner, repository name,
+  identifiers). The user fills the holes and applies. No planner is installed.
+  Where the forge can inherit by reference (reusable workflows, shared
+  community files), the published plan writes only the thin caller, so the
+  drift surface stays small.
+* *Tier 1, the composer* is a planner that _computes_ the plan from
+  spine@pin × pack × features × profile, and for retrofit from a three-way
+  comparison. It hands the plan to the same kernel.
+
+A Tier 0 user who outgrows published plans installs a planner and changes
+nothing else. That is what "atop" means here.
+
+=== Composition is a join, not an overwrite
+
+A plan maps each path to at most one operation. Composing two plans is a
+partial join: paths in only one side carry over; a path in both sides with the
+same operation merges; a path in both sides with different operations is a
+*conflict*, and the result is an error, never a last-writer-wins. The only
+exception is a replacement that an input contract authorises by name
+(issue #70, "contract-authorised overlay path replacement"); it is recorded in
+the plan's provenance.
+
+Laws to state and prove (theory; Agda under
+`--safe --without-K --cubical-compatible`, rechecked per PROOF-POLICY §2):
+
+. join is commutative, associative and idempotent wherever it is defined, so
+  pack order cannot change the result;
+. a join of safe plans is safe;
+. applying a plan twice equals applying it once;
+. for compatible plans, applying the join equals applying one then the other.
+
+Law 1 is why "pack A then pack B" and "pack B then pack A" need no ordering
+rule, and why an undeclared conflict cannot be hidden by ordering. These are
+candidates for registration in `hyperpolymath/mathesis` once proved; nothing is
+claimed until receipts exist.
+
+Rust kernel code is verified with *Creusot* (contracts in *Pearlite*) and
+*Verus* by default (PROOF-POLICY §1.2). Planned scope for both: path
+normalisation and containment; uniqueness of paths in a checked plan;
+idempotence of apply on a modelled file system. Status today: *not run* for
+either verifier; no kernel code exists.
+
+=== Compare engines with a suite, not an argument
+
+`verification/conformance/` holds an engine-neutral suite in two halves.
+
+* *Kernel cases* give a plan and a starting tree and assert the resulting tree
+  or the refusal. A minimal engine is conformant when it passes these.
+* *Planner cases* give pinned inputs and assert properties of the produced
+  plan (and of the tree after the reference kernel applies it).
+
+Levels: `L0` reference mint and kernel safety; `L1` composition; `L2` retrofit;
+`L3` sustain (checks that must hold in a child as well as in a template). An
+engine states the highest level it passes; a level passes only when every case
+at and below it passes on the pull-request head, and a skipped case is reported
+as skipped.
+
+The suite is the selection gate of ADR-0002. Its first cases come from defects
+found when real repositories were minted from `rsr-template-repo` and from the
+negative tests ADR-0002 already lists. Those defects are recorded here as
+cases, not patched in the template's scripts, so the knowledge moves with the
+suite and not with the engine being replaced.
+
+Planner candidates to spike against the suite, equal scope (`L0` then `L1`):
+
+[cols="2,3",options="header"]
+|===
+| Candidate | What the spike must show
+
+| Rust planner | Deed input to deterministic plan with no second grammar.
+| Dormant Haskell CLI + Nickel builder | That `init`/`build` can be connected
+to emit a plan; today they invoke no renderer.
+| Nickel only | That composition can be Nickel record merge with contracts and
+no host-language planner: Nickel's merge already refuses conflicting values,
+which is the join above. The harvested registry is already Nickel.
+|===
+
+== What this does not decide
+
+* The engine (ADR-0002 selection gate stands).
+* *Where the kernel lives.* The plan level is what HAR calls `har-il`. Building
+  it in HAR and consuming it here is the "solutions at source" arm; building it
+  here first is quicker and can move later because the plan format, not the
+  code location, is the interface. Owner decision; spike code is not a
+  commitment.
+* *The carrier for the graph level.* HAR ADR-0002 names A2ML, which has since
+  been retired estate-wide. That is HAR's decision to revisit; Scaffoldia
+  plans are I-JSON/JCS and its declarations are deed clauses.
+* Any forge mutation, fan-out, licence or SPDX edit (ADR-0002 limits stand).
+
+== Consequences
+
+* Engine choice becomes low-stakes: a planner can be replaced without touching
+  the safety argument.
+* `rsr-template-repo` becomes an input (a spine and packs, as data). Nothing in
+  Scaffoldia depends on its mint scripts.
+* One more internal format to version (the plan), and a kernel that must stay
+  small enough to verify. Both are costs.
+* Lifting an arbitrary existing repository to a graph is lossy (HAR ADR-0002
+  says the same); `L2` cases must include a repository the engine cannot fully
+  classify and assert that it says so.
+
+== Acceptance evidence before this ADR is accepted
+
+A kernel spike passing every `L0` kernel case, including the refusals, with a
+negative control showing the suite fails a deliberately unsafe kernel; and the
+join laws either proved or listed as open with their statements checked.
