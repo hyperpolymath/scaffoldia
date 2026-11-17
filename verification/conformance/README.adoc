@@ -32,8 +32,8 @@ SHA-256, held in a blob directory at `sha256/<64 lowercase hex>`.
 ----
 {"holes":[],
  "inputs":[{"name":"spine","repo":"owner/name","rev":"<40 hex>"}],
- "ops":[{"expect":"absent","mode":"644","op":"write","path":"README.adoc",
-         "blob":"sha256:<64 hex>","source":{"input":"spine","path":"README.adoc"}}],
+ "ops":[{"blob":"sha256:<64 hex>","expect":"absent","mode":"644","op":"write",
+         "path":"README.adoc","source":{"input":"spine","path":"README.adoc"}}],
  "plan_version":"0.1"}
 ----
 
