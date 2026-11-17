@@ -42,6 +42,11 @@ Zig tests or passing isolated workflows.
   receipts; skips remain reported as skips.
 * [ ] Prove idempotence, deterministic replay, negative-case enforcement and
   same-input repeatability in CI.
+* [x] Plan kernel spike (ADR-0003, Rust, `src/kernel/`) passes all 47 `L0`
+  kernel conformance cases and the suite fails each of its 3 negative controls
+  (`just conformance`, local run 2026-11-17; see
+  `verification/conformance/README.adoc`, Evidence). Not in CI; no planner;
+  Creusot/Pearlite and Verus contracts not run.
 
 == M1 — Sustain loop (after M0)
 

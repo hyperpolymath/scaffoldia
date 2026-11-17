@@ -184,5 +184,38 @@ control is itself broken, and the runner's self-test says so.
 
 == Evidence
 
-None yet. No runner, case or engine has been run. This section is updated only
-with a command, a commit and its output.
+This section is updated only with a command, a commit and its output.
+
+=== 2026-11-17: Rust kernel spike, L0
+
+Commit `35752ee` (branch `wo/KERNEL`; a local commit, so the id changes if it
+is rebased). Command, from a clean `src/kernel/target/`:
+
+[source,bash]
+----
+just conformance
+# = cargo build --release --locked --manifest-path src/kernel/Cargo.toml
+#   verification/conformance/gen-cases.sh --check
+#   verification/conformance/run.sh --level L0 --kernel src/kernel/target/release/scaffoldia-kernel
+#   verification/conformance/selftest.sh --level L0
+----
+
+Observed (exit 0; rustc 1.97.0, jq 1.7, GNU coreutils, Linux):
+
+----
+gen-cases: committed cases match the generator (47 cases)
+L0: 47 ok, 0 FAIL, 0 SKIP
+level L0: PASS (47 cases)
+control naive-kernel.sh: FAILED by the suite, as required (40 of 47 cases caught it)
+control no-atomicity-kernel.sh: FAILED by the suite, as required (3 of 47 cases caught it)
+control refuse-all-kernel.sh: FAILED by the suite, as required (43 of 47 cases caught it)
+selftest: PASS (3 controls, each failed by the suite at L0)
+----
+
+The no-atomicity control is caught only by `all-or-nothing` and
+`target-symlink` (both leave its first write behind) and by
+`residue-from-answer` (it substitutes repeatedly). Only `L0` kernel cases
+exist; there are no planner cases and no `L1`–`L3` cases, so nothing is
+claimed above `L0`. This is a local run, not CI. The kernel's Creusot
+(Pearlite) and Verus contracts are *not run*
+(`src/kernel/plan-kernel/PROOF-PLAN.adoc`).
