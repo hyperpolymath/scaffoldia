@@ -1,57 +1,46 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MPL-2.0
-# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
-#
-# check-no-md-in-docs.sh — enforce "AsciiDoc by default for general docs".
-#
-# Estate rule: .adoc for general docs (TOPOLOGY, READINESS, ROADMAP, etc.);
-# .md only for files GitHub's community-health rules special-case by name
-# (CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, CHANGELOG, etc.) — those live at
-# root or in .github/, never under docs/.
-#
-# Fails if any .md files exist under docs/. Add justified entries to the
-# ALLOWED list below if a docs/-rooted .md is genuinely needed (rare).
-#
-# Exit codes:
-#   0 — no .md files under docs/ (or all matches are allow-listed)
-#   1 — disallowed .md files found
-#   2 — usage / setup error
-
+# Enforce canonical estate document-format split:
+#   docs/<topic>/ -> AsciiDoc (.adoc)
+#   docs/wiki/ and docs/wikis/ -> Markdown (.md) wiki content
+# The owner of this rule is proven-cicd-and-workflows/actions/formatting-check.
 set -euo pipefail
 
-REPO_ROOT="${1:-.}"
-DOCS_DIR="$REPO_ROOT/docs"
-
-# Justified exceptions, relative to repo root. Empty by default.
-ALLOWED=()
-
-if [ ! -d "$DOCS_DIR" ]; then
-    echo "PASS: no docs/ directory (nothing to check)"
-    exit 0
+root="$(cd "${1:-.}" 2>/dev/null && pwd)" || {
+  echo 'NOT_RUN: repository root does not exist' >&2
+  exit 2
+}
+command -v git >/dev/null || { echo 'NOT_RUN: git unavailable' >&2; exit 2; }
+git -C "$root" rev-parse --show-toplevel >/dev/null 2>&1 || {
+  echo 'NOT_RUN: not a Git checkout' >&2
+  exit 2
+}
+if [ ! -d "$root/docs" ]; then
+  echo 'NOT_APPLICABLE: repository has no docs/ tree'
+  exit 0
 fi
 
-mapfile -t HITS < <(find "$DOCS_DIR" -name '*.md' -type f 2>/dev/null | sort)
+checked=0
+bad=0
+while IFS= read -r -d '' path; do
+  case "$path" in
+    docs/*.md)
+      checked=$((checked+1))
+      case "$path" in
+        docs/wiki/*.md|docs/wikis/*.md)
+          echo "OK: Markdown wiki source: $path"
+          ;;
+        *)
+          echo "FAIL: non-wiki documentation must be AsciiDoc: $path" >&2
+          bad=$((bad+1))
+          ;;
+      esac
+      ;;
+  esac
+done < <(git -C "$root" ls-files -z --cached --others --exclude-standard -- docs)
 
-EXTRAS=()
-for hit in "${HITS[@]}"; do
-    rel="${hit#"$REPO_ROOT/"}"
-    skip=0
-    for allowed in "${ALLOWED[@]}"; do
-        if [ "$rel" = "$allowed" ]; then skip=1; break; fi
-    done
-    if [ $skip -eq 0 ]; then EXTRAS+=("$rel"); fi
-done
-
-if [ ${#EXTRAS[@]} -eq 0 ]; then
-    echo "PASS: no .md files under docs/ (${#HITS[@]} total found, ${#ALLOWED[@]} allow-listed)"
-    exit 0
+if [ "$bad" -gt 0 ]; then
+  echo "FAIL: $bad Markdown document(s) outside wiki roots; $checked checked" >&2
+  exit 1
 fi
-
-echo "FAIL: ${#EXTRAS[@]} .md files found under docs/ (estate rule: AsciiDoc by default):" >&2
-for e in "${EXTRAS[@]}"; do
-    echo "  - $e" >&2
-done
-echo "" >&2
-echo "Convert these to .adoc, or add a justified entry to the ALLOWED list" >&2
-echo "in scripts/check-no-md-in-docs.sh." >&2
-exit 1
+echo "PASS: $checked Markdown path(s) conform to canonical wiki-only exception"

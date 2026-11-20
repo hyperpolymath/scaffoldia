@@ -1,0 +1,122 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Scaffoldia Evidence and Coverage Matrix (2026-11-15)
+:toc:
+:sectnums:
+
+== Source authority and evidence
+
+The normative taxonomy is
+`metadatastician/standards/3-practice/testing-and-benchmarking/TESTING-TAXONOMY.adoc`
+at `d677777725ebf3d69b7eb27534612da77ae95ed6`: **18 categories and 14 aspects**.
+The proven test doctrine and downstream evidence contract belong to
+`hyperpolymath/proven-tests-and-benches` at
+`f90bacbe3a5fa1869239fcb9175757509464aa13`.
+The reusable CI source for this pilot is
+`hyperpolymath/proven-cicd-and-workflows` at
+`5b6024c0ce6ea4a97ea6f4c87b1f4e34267d69a6`.
+
+IMPORTANT: the published Proven-Tests schema-v2 receipt has **17 x 14 = 238**
+cells. Category 18 was added to the standards taxonomy afterwards.
+`proven-tests-and-benches/docs/TAXONOMY-VERSION-BOUNDARY.adoc` explicitly
+requires a versioned v3 migration for 18 x 14 = 252. Until then, classify
+category 18 **outside** schema-v2 reports. Never change a denominator and
+reinterpret previously issued evidence.
+
+Status vocabulary: OBSERVED = executed, nonvacuous local check; THIN =
+executed but weaker than category obligations; ABSENT = no executed
+admissible test; N/A = justified inapplicable subject. Proposed workflow
+changes and unexecuted CI count as **pending**, not OBSERVED.
+
+== Test-category assessment
+
+[cols="1,3,1,6",options="header"]
+|===
+| # | Category | Status | Actual scope / outstanding obligation
+
+| 1 | Unit | OBSERVED | 3 Zig-side implementation tests, not a composer
+| 2 | P2P | ABSENT | Idris2 `C:rsr_*` imports do not match Zig `scaffoldia_*` exports; no linked consumer
+| 3 | E2E | THIN | Existing `tests/e2e.sh` builds Idris2 then Zig independently; no mint or retrofit
+| 4 | Build | OBSERVED | Local Idris2 0.8.0 and Zig 0.16.0 builds passed; pinned CI installation is pending a PR run
+| 5 | Execution / runtime | THIN | Zig integration tests exercise stubbed FFI functions, not composer runtime
+| 6 | Reflexive | THIN | Proven-lock selftest and aspect-harness silence/firing/void controls; not composer self-audit
+| 7 | Lifecycle | THIN | Zig handle init/free tests; no repository mint/retrofit state transitions
+| 8 | Smoke | OBSERVED | 3-section compiler and Zig smoke run locally; not a usable repository designer
+| 9 | Property-based / generative | ABSENT | No generated composer property cases, shrinking, regression seeds
+| 10 | Mutation | ABSENT | No enumerated mutants or mutation score of the subject
+| 11 | Fuzz | ABSENT | No live parser, deed, path, lock or FFI fuzz harness; do not credit placeholders
+| 12 | Contract / invariant | THIN | Proven lock verdict on current lock; no composer contract, deed or ABI behavioural conformance
+| 13 | Regression | THIN | Aspect false-positive and lock-ref controls; no comprehensive issue-linked corpus
+| 14 | Chaos / resilience | ABSENT | No interruption, partial-write, atomicity or rollback injection
+| 15 | Compatibility | ABSENT | No real version/platform migration or parent-tree compatibility matrix
+| 16 | Proof regression | THIN | Idris module builds; linked proof claims and Coq/Lean example artifacts not gated as evidence
+| 17 | Type-safe | THIN | Idris2 compilation; no pinned negative compile-failure witnesses for composer safety
+| 18 | Coupling / drift-freedom | THIN | Local generated-lock agreement checked; deed/canon/spine/ABI drift not covered. Outside v2 lattice
+|===
+
+== Fourteen aspect dimensions
+
+[cols="2,1,5",options="header"]
+|===
+| Aspect | Status | What actually runs or still needs evidence
+
+| Dependability | THIN | Build/smoke locally; no crash and recovery tests
+| Security | THIN | Basic lock and source checks; failed/missing reusable security jobs on main
+| Usability | ABSENT | No real composer CLI user journey
+| Interoperability | ABSENT | Missing linked Idris2/Zig P2P test; deed reader unimplemented
+| Safety | THIN | Lexical proof escape guard; not a source-linked proof or path write safety proof
+| Performance | THIN | Generic build timing templates only; no composer or stable benchmark baseline
+| Functionality | ABSENT | Composer/mint/retrofit unimplemented
+| Versability | ABSENT | No contract version migration or binary compatibility tests
+| Accessibility | N/A | No working UI or CLI interface to audit; revisit when an interface exists
+| Maintainability | THIN | Tool and source-scope checks; some stale validators remain
+| Privacy | THIN | Security scanner intended; no repository identity/telemetry data-minimization evidence
+| Observability | THIN | Lock and aspect errors classified; no execution receipt schema or runtime trace
+| Reproducibility | THIN | Immutable proven suite pin; same-input composer artifact comparison absent
+| Portability | THIN | Linux x86_64 local toolchain; platform and architecture matrix absent
+|===
+
+== Local execution receipt (base source, not a CI verdict)
+
+Subject: Scaffoldia `8c833fbe38c63561b7a9d7bc1c74f786c95d49d1`,
+temporary clean checkout on Linux, Idris2 `0.8.0` and Zig `0.16.0`.
+
+* `bash tests/e2e.sh`: passed 3 build/test stages; does **not** link the ABI.
+* Initial `bash tests/aspect_tests.sh`: failed on generated Zig cache and
+  Coq/docs commentary; existing source and proof scope was defective.
+* Repaired `bash tests/workflows/aspect_scope_test.sh`: four controls
+  pass (one silence, two seeded firing, one NOT_RUN).
+* Repaired `bash tests/aspect_tests.sh`: passes 15 tracked source files,
+  including 12 proof-language files, lexical only.
+* `bash scripts/check-workflow-uses-lock.sh .`: baseline fails on four
+  `actions/upload-artifact` references mismatched with the generated lock;
+  corrected in this pilot.
+* Published Proven Lock Gate, run against the local candidate with pinned
+  proven source: `PROVEN_LOCK_CLASS=consistent` (exit 0). It explicitly
+  marked `OwnerIdDrift` and `Moved` unjudged (no oracle snapshot).
+
+Every claim above is **local**; a PR must reproduce the results with its
+latest commit. A skipped, missing, startup-failed or cancelled required job
+is not passing evidence.
+
+== Next assurance obligations (priority order)
+
+. P0: make CI toolchains and all required workflow calls actually execute;
+  repair stale standards reusable coordinates and fix policy-dependent
+  `actions.lock` closure without disabling existing security checks.
+. P0: obtain actual Idris2-to-Zig or C linked consumer evidence using the
+  generic Proven-Tests ABI test **after** its review and promotion; refuse
+  an ABI compatibility claim based on two independent builds.
+. P1: implement deterministic composer plan, sandboxed mint and retrofit,
+  then add two independent source-derived fixtures (Julia and Rust).
+. P1: build admissible silence/firing/void specimens for deed parsing,
+  canonical overlay precedence, traversal, symlink escape, collisions,
+  idempotence and three-way conflicts; contribute genuinely reusable
+  primitives to the proven corpus first.
+. P1: apply mutation, fuzz and generative tests to the implemented
+  composer; retain seeds, shrinking, corpus provenance and real failure
+  controls.
+. P2: baseline real composer benchmarks and update readiness only from
+  executed evidence, reviewed receipts and Hypatia's own scoring.
+
+Do not turn advisory proven-cicd catalogue items, experimental mother
+profiles, or 17-category schema-v2 output into false mandatory coverage.

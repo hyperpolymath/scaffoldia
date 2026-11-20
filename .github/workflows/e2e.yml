@@ -23,15 +23,25 @@ on:
       - 'src/**'
       - 'ffi/**'
       - 'tests/**'
+      - 'verification/proofs/**'
       - '.github/workflows/e2e.yml'
+      - 'build/**'
+      - 'Justfile'
+      - '.tool-versions'
   pull_request:
     branches: [main, master]
     paths:
       - 'src/**'
       - 'ffi/**'
       - 'tests/**'
+      - 'verification/proofs/**'
+      - '.github/workflows/e2e.yml'
+      - 'build/**'
+      - 'Justfile'
+      - '.tool-versions'
   workflow_dispatch:
-permissions: read-all
+permissions:
+  contents: read
 concurrency:
   group: e2e-${{ github.ref }}
   cancel-in-progress: true
@@ -42,17 +52,47 @@ jobs:
   e2e:
     name: E2E — smoke
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+      - name: Check aspect harness silence, firing and unavailable controls
+        run: bash tests/workflows/aspect_scope_test.sh
+      - name: Check tracked source aspects
+        run: bash tests/aspect_tests.sh
+      - name: Bootstrap Idris2 0.8.0 from a verified source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends chezscheme libgmp-dev gcc make git ca-certificates
+          idir="$RUNNER_TEMP/idris2-source"
+          git init -q "$idir"
+          git -C "$idir" remote add origin https://github.com/idris-lang/Idris2.git
+          git -C "$idir" fetch -q --depth 1 origin 15a3e4e70843f7a34100f6470c04b791330788df
+          git -C "$idir" checkout -q --detach FETCH_HEAD
+          test "$(git -C "$idir" rev-parse HEAD)" = "15a3e4e70843f7a34100f6470c04b791330788df"
+          make -C "$idir" bootstrap SCHEME=chezscheme
+          make -C "$idir" install
+          "$HOME/.idris2/bin/idris2" --version | grep -F "0.8.0"
+          echo "$HOME/.idris2/bin" >> "$GITHUB_PATH"
+      - name: Install Zig 0.16.0 from sha256-verified official archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz"
+          archive="$RUNNER_TEMP/zig-0.16.0.tar.xz"
+          curl --fail --location --silent --show-error --proto '=https' "$url" -o "$archive"
+          printf '%s  %s\n' '70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00' "$archive" | sha256sum --check -
+          tar -xJf "$archive" -C "$RUNNER_TEMP"
+          test "$("$RUNNER_TEMP/zig-x86_64-linux-0.16.0/zig" version)" = "0.16.0"
+          echo "$RUNNER_TEMP/zig-x86_64-linux-0.16.0" >> "$GITHUB_PATH"
+      - name: Declare current scope
+        run: echo "::notice::The harness builds Idris2 and separately tests Zig; it is not yet a linked Idris2-to-Zig P2P test or a composer E2E test."
       - name: Run E2E harness
         run: |
-          if [ -f tests/e2e.sh ]; then
-            bash tests/e2e.sh
-          else
-            echo "::notice::no tests/e2e.sh present — nothing to run"
-          fi
+          test -f tests/e2e.sh || { echo "::error::Required E2E smoke harness missing"; exit 2; }
+          bash tests/e2e.sh
 
 # ─── End-to-End Tests (downstream stack-specific examples) ─────────
 # Uncomment ONE of the following e2e job blocks matching your stack.
