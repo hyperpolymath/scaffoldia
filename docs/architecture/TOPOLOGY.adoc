@@ -69,8 +69,24 @@ Identity + capability request -'            |
 
 * Ingest: pinned canon/spine snapshots, exact deed contracts and overlays;
   reject unknown capability, unpinned inputs and invalid paths.
-* Plan: deterministic ordering; detect duplicate and overlapping path claims;
-  emit explicit conflicts; never silent last-writer-wins.
+* Plan: deterministic ordering and declared path ownership. An archetype or
+  feature overlay may *replace* a spine-owned path only when an applicable
+  pinned deed contract explicitly authorises replacement of that canonical
+  relative path. Record the authorising deed, source and target layers, the
+  expected old content/hash and replacement operation in the plan and receipt.
+  A change of base hash, unrecognised deed authorisation, undeclared overlap,
+  competing overlay claims, path traversal, alias collision or forbidden
+  capability must fail closed. No silent last-writer-wins.
+* Overlay precedence: first pin the spine/base snapshot, then apply
+  contract-authorised archetype and feature overlays in the explicit order
+  defined by the pinned deed contract. Where the upstream contract provides
+  no order for competing overlays, fail with a conflict rather than inventing
+  precedence. A later authorised replacement has scope only for its declared
+  path; it is not permission to supersede an entire layer.
+* The preceding rules describe the intended planner semantics, not a newly
+  implemented deed schema or a current runtime capability. Use the upstream
+  deed's normative replacement representation when implementing the planner;
+  do not invent an alternate public overlay contract.
 * Apply: sandboxed file staging, no remote mutation by default; authorisation
   required for real repository modification and all forge configuration.
 * Reconcile: compare pinned base, current child, and desired child; preserve
