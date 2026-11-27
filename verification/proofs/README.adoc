@@ -20,6 +20,7 @@ proofs/
 ├── lean4/           # Lean4 proofs (algebra, lattices)
 │   └── ApiTypes.lean
 ├── agda/            # Agda proofs (induction, metatheory)
+│   ├── PlanLaws/    # ADR-0003 plan laws (just proof-check-plan-laws)
 │   └── Properties.agda
 ├── coq/             # Coq proofs (type systems, compilation)
 │   └── TypeSafety.v

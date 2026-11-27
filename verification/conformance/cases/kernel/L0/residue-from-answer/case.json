@@ -1,0 +1,1 @@
+{"expect":{"code":"RESIDUE","outcome":"refused"},"id":"residue-from-answer","kind":"instantiate","level":"L0","principle":"Substitution is one pass and residue is checked on the result, so an answer cannot smuggle in template text","source":"conformance README, Instantiate","title":"An answer that itself contains a token"}

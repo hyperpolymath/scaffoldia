@@ -1,0 +1,1 @@
+{"expect":{"code":"PRECONDITION","outcome":"refused"},"id":"precondition-ancestor-file","kind":"apply","level":"L0","principle":"A planned path needs directories, not files, above it","source":"conformance README, Apply","title":"A planned path under an existing file"}

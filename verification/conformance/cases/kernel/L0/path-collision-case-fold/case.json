@@ -1,0 +1,1 @@
+{"expect":{"code":"PATH_COLLISION","outcome":"refused"},"id":"path-collision-case-fold","kind":"apply","level":"L0","principle":"No path alias or case collision","source":"ADR-0002, Safety invariants and Acceptance evidence","title":"Two paths equal after case folding"}

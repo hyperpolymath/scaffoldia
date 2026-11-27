@@ -1,0 +1,1 @@
+{"expect":{"code":"PLAN_VERSION","outcome":"refused"},"id":"plan-version","kind":"apply","level":"L0","principle":"An unknown plan version is refused, not guessed","source":"conformance README, Plan format v0.1","title":"A plan version this kernel does not implement"}

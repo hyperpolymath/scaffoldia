@@ -1,0 +1,1 @@
+{"expect":{"code":"PRECONDITION","outcome":"refused"},"id":"precondition-expect-sha","kind":"apply","level":"L0","principle":"A replacement needs exactly the base content the planner saw","source":"conformance README, Apply","title":"expect sha256, but the content differs"}

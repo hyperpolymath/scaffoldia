@@ -1,0 +1,1 @@
+{"expect":{"code":"PATH_UNSAFE","outcome":"refused"},"id":"check-path-unsafe","kind":"check","level":"L0","principle":"check applies the same safety rules as apply","source":"conformance README, Safe paths","title":"check refuses an unsafe path"}

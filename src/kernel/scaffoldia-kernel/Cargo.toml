@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# I/O edge of the plan kernel: argument parsing, JSON parsing, hashing, NFC
+# and filesystem effects. All safety decisions are delegated to the core.
+[package]
+name = "scaffoldia-kernel"
+description = "Scaffoldia plan kernel: check, instantiate and apply plan format v0.1"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "scaffoldia-kernel"
+path = "src/main.rs"
+
+[dependencies]
+plan-kernel = { path = "../plan-kernel" }
+serde_json = "1.0"
+sha2 = "0.10"
+unicode-normalization = "0.1"

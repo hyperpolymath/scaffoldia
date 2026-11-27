@@ -120,12 +120,10 @@ clean-all: clean
 # TEST & QUALITY
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Run all tests
-test *args:
-    @echo "Running tests..."
-    idris2 --typecheck src/interface/abi.ipkg
-    cd src/interface/ffi && zig build test {{args}}
-    @echo "Tests passed!"
+# Run the tests that gate this repository: the conformance suite at L0
+# (the CI check `Conformance L0`). The inherited Idris2/Zig seam is not
+# covered; see test-verbose, test-smoke and docs/status/ROADMAP.adoc (P0).
+test: conformance
 
 # Run tests with verbose output
 test-verbose:
@@ -139,7 +137,8 @@ test-smoke:
     idris2 --typecheck src/interface/abi.ipkg
     cd src/interface/ffi && zig build
 
-# Run end-to-end tests (full pipeline: build → run → verify)
+# Inherited Idris2/Zig harness. NOT run by CI and not a gate (retired as a CI
+# check 2026-11-17; docs/status/ROADMAP.adoc P0). Needs idris2 and zig.
 e2e:
     bash tests/e2e.sh
 
@@ -173,10 +172,10 @@ crg-badge:
     esac; \
     echo "[![CRG $$grade](https://img.shields.io/badge/CRG-$$grade-$$color?style=flat-square)](https://github.com/hyperpolymath/standards/tree/main/component-readiness-grades)"
 
-# Run the full merge-requirement test suite (ALL categories)
-# Per STANDING rule: P2P + E2E + aspect + execution + lifecycle + bench
-test-all: test e2e aspect bench
-    @echo "All test categories passed — safe to merge!"
+# Run the local test categories that exist: conformance, aspect, bench.
+# This is not the merge gate; the required CI check is `Conformance L0`.
+test-all: test aspect bench
+    @echo "Local test categories passed."
 
 # Run all quality checks
 quality: fmt-check lint test
@@ -664,6 +663,12 @@ help-me:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 import? "build/just/proofs.just"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PLAN KERNEL & CONFORMANCE SUITE — see build/just/conformance.just
+# ═══════════════════════════════════════════════════════════════════════════════
+
+import? "build/just/conformance.just"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # SESSION MANAGEMENT (THIN BINDINGS TO CENTRAL STANDARDS)

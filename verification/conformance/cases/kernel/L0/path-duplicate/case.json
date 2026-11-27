@@ -1,0 +1,1 @@
+{"expect":{"code":"PATH_DUPLICATE","outcome":"refused"},"id":"path-duplicate","kind":"apply","level":"L0","principle":"A plan maps each path to at most one operation","source":"conformance README, Plan format v0.1","title":"Two operations on one path"}

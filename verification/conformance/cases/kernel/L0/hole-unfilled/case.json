@@ -1,0 +1,1 @@
+{"expect":{"code":"HOLE_UNFILLED","outcome":"refused"},"id":"hole-unfilled","kind":"instantiate","level":"L0","principle":"Every hole must have an answer","source":"conformance README, Instantiate","title":"A hole without an answer"}

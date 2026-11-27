@@ -1,0 +1,1 @@
+{"expect":{"code":"PATH_COLLISION","outcome":"refused"},"id":"path-collision-prefix","kind":"apply","level":"L0","principle":"No path is a proper directory prefix of another","source":"conformance README, Safe paths","title":"A file path that is a directory prefix of another"}

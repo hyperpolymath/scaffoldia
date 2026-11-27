@@ -1,0 +1,1 @@
+{"expect":{"code":"BLOB_MISSING","outcome":"refused"},"id":"blob-missing","kind":"apply","level":"L0","principle":"Content is never inline and never fetched: every blob is present","source":"conformance README, Plan format v0.1","title":"A write whose blob is absent"}

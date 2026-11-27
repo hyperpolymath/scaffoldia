@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# Scaffoldia plan kernel spike (ADR-0003). `plan-kernel` is the pure, std-only
+# decision layer meant for Creusot/Pearlite and Verus contracts; `scaffoldia-kernel` is the
+# I/O edge (JSON parsing, hashing, NFC, filesystem).
+[workspace]
+members = ["plan-kernel", "scaffoldia-kernel"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MPL-2.0"
+publish = false
+repository = "https://github.com/hyperpolymath/scaffoldia"

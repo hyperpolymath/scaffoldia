@@ -1,0 +1,1 @@
+{"expect":{"code":"MALFORMED","outcome":"refused"},"id":"malformed-not-jcs","kind":"apply","level":"L0","principle":"A plan is I-JSON serialised by JCS; one plan has one byte form, so one digest","source":"conformance README, Plan format v0.1","title":"Valid JSON that is not JCS-serialised"}

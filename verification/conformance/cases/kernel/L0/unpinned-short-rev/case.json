@@ -1,0 +1,1 @@
+{"expect":{"code":"SOURCE_UNPINNED","outcome":"refused"},"id":"unpinned-short-rev","kind":"apply","level":"L0","principle":"Sources are pinned by full commit id, never inferred","source":"ADR-0002, Safety invariants and Acceptance evidence","title":"An input pinned by an abbreviated commit id"}

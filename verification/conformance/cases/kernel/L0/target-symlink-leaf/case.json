@@ -1,0 +1,1 @@
+{"expect":{"code":"TARGET_SYMLINK","outcome":"refused"},"id":"target-symlink-leaf","kind":"apply","level":"L0","principle":"No symlink escape: a link at a planned path is not read through or written through","source":"ADR-0002, Safety invariants and Acceptance evidence","title":"The planned path itself is a link pointing outside"}

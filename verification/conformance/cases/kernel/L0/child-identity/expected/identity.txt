@@ -1,0 +1,2 @@
+forge: github.com/example-org/example-child
+name: example-child

@@ -40,7 +40,7 @@ Scaffoldia consumes these schemas; it does not fork their definitions.
 | `src/interface/Abi/` | Generic Idris2 foreign declarations and type/layout model | Not matched to Zig exports
 | `src/interface/ffi/` | Zig exported scaffold functions and unit/integration tests | No composer operations; Zig-side tests only
 | `verification/proofs/` | Example/skeleton proof artifacts | No linked composer assurance
-| `tests/` | Shell E2E, aspect, workflow tests | No actual mint/retrofit acceptance test
+| `tests/` | Conformance and workflow tests; inherited E2E harness (not run by CI), aspect tests | No actual mint/retrofit acceptance test
 | `.github/workflows/` | 25 YAML workflows, actions.lock | Multiple pre-existing CI failures
 | `.machine_readable/`, `build/`, `Justfile` | RSR substrate and task recipes | Some checks refer to removed/moved paths
 |===
@@ -100,7 +100,7 @@ ADR-0002 leaves retention/retirement of this optional seam open.
   permissions, allowlist and pinned reusable workflows separately.
 * Some reusables still refer to `hyperpolymath/standards` while the live
   canon is `metadatastician/standards`.
-* The `e2e.yml` job invokes a script requiring Idris2 and Zig without
+* (Resolved 2026-11-17: `e2e.yml` now runs the conformance suite as `Conformance L0`; `tests/e2e.sh` is no longer run by CI.) It used to invoke a script requiring Idris2 and Zig without
   explicit toolchain provisioning.
 
 Do not suppress failures to create a green summary. Fix at the owning layer

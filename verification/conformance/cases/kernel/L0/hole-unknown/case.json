@@ -1,0 +1,1 @@
+{"expect":{"code":"HOLE_UNKNOWN","outcome":"refused"},"id":"hole-unknown","kind":"instantiate","level":"L0","principle":"Every answer must name a hole","source":"conformance README, Instantiate","title":"An answer that names no hole"}
